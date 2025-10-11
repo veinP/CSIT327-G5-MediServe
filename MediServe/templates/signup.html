@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}User Registration{% endblock %}
+
+{% block content %}
+<div style="width: 100%; max-width: 950px; margin: 0 auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); display: flex; overflow: hidden;">
+
+    <!-- LEFT PANEL: Registration Form -->
+    <div style="flex: 0.7; background-color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <h2 style="color: #36489e; margin-bottom: 25px;">Register New Account</h2>
+
+        <!-- Display Django Messages -->
+        {% if messages %}
+            <ul style="list-style: none; padding: 0; width: 100%; max-width: 500px; margin-bottom: 20px;">
+                {% for message in messages %}
+                    <li style="padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;
+                        {% if 'error' in message.tags %}background-color: #ffe6e6; color: #dc3545; border: 1px solid #dc3545;
+                        {% else %}background-color: #f7f9fa; color: #333; border: 1px solid #ddd;{% endif %}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Registration Form -->
+        <form method="post" enctype="multipart/form-data" style="width: 100%; max-width: 650px;">
+            {% csrf_token %}
+
+            <!-- Email & Password -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <input type="email" name="email" placeholder="Email Address" required>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <!-- Confirm Password -->
+            <div style="margin-bottom: 15px;">
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required style="width: 100%;">
+            </div>
+
+            <!-- Full Name -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 0.5fr; gap: 15px; margin-bottom: 15px;">
+                <input type="text" name="first_name" placeholder="First Name" required>
+                <input type="text" name="last_name" placeholder="Last Name" required>
+                <input type="text" name="middle_initial" placeholder="M.I." maxlength="1">
+            </div>
+
+            <!-- DOB and Gender -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
+                <input type="date" name="date_of_birth" title="Date of Birth" required>
+                <select name="sex" required>
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn" style="background-color: #5c74e3; padding: 15px 0; width: 100%;">
+                <i class="fas fa-check"></i> Complete Registration
+            </button>
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL: Login Redirect -->
+    <div style="flex: 0.3; background-color: #36489e; color: #FFFFFF; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <h2 style="color: #FFFFFF; margin-bottom: 15px;">Member Access</h2>
+        <p style="color: #EEEEEE; margin-bottom: 30px;">Already have an account? Log in now.</p>
+        <a href="{% url 'login' %}" class="btn-secondary" style="background-color: #FFFFFF; color: #36489e; padding: 12px 25px; border: none;">
+            <i class="fas fa-sign-in-alt"></i> Log In
+        </a>
+    </div>
+</div>
+{% endblock %}
