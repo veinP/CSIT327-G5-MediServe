@@ -32,7 +32,7 @@ The MediServe application has two main interfaces: **User Portal (Residents)** a
 ### 🧑‍⚕️ 2. Admin Portal (Health Center Staff)
 | **Feature** | **Description** |
 |--------------|----------------|
-| **Admin Dashboard** | Centralized hub accessible only by staff (`/management/menu/`). |
+| **Admin Dashboard** | Centralized hub accessible only by staff. |
 | **Stock Management** | View/edit medicine quantities and prices with color-coded stock alerts. |
 | **Order Fulfillment** | View and manage orders (“Processing” or “Shipped”) and mark them as completed. |
 | **Analytics & Records** | View key performance indicators and transaction logs for all stock updates. |
