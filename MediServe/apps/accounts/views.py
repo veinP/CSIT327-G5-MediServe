@@ -11,6 +11,22 @@ def home_redirect(request):
 def signup_view(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
+
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        # Check if passwords match
+        if password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'signup.html', {'form': form})
+
+        # Check if email already exists
+        if Account.objects.filter(email=email).exists():
+            messages.error(request, 'An account with this email already exists.')
+            return render(request, 'signup.html', {'form': form})
+
+        # If form is valid, save the user
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
@@ -23,6 +39,7 @@ def signup_view(request):
         form = SignupForm()
 
     return render(request, 'signup.html', {'form': form})
+
 
 def login_view(request):
     if request.method == 'POST':
