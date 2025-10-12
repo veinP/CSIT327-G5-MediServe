@@ -5,15 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import Account
 
-
-# 🏠 Redirect root to login
 def home_redirect(request):
     return redirect('login')
 
-
-# ==========================
-# SIGNUP VIEW
-# ==========================
 def signup_view(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
@@ -30,27 +24,21 @@ def signup_view(request):
 
     return render(request, 'signup.html', {'form': form})
 
-
-# ==========================
-# LOGIN VIEW
-# ==========================
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
-        email = request.POST.get('username')  # Django default username field name
+        email = request.POST.get('username')  
         password = request.POST.get('password')
 
-        # Check if email exists
         user_exists = Account.objects.filter(email=email).exists()
 
         if not user_exists:
             messages.error(request, 'No account found with this email. Please sign up first.')
         else:
-            # Authenticate user
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                # Redirect based on role
+                
                 if user.is_staff or user.is_superuser:
                     return redirect('admin_menu')
                 else:
@@ -62,23 +50,14 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
-
-# ==========================
-# LOGOUT VIEW
-# ==========================
 def logout_view(request):
     logout(request)
     messages.success(request, 'Logged out successfully.')
     return redirect('login')
 
-
-# ==========================
-# MENU & PROFILE VIEWS
-# ==========================
 @login_required
 def admin_menu_view(request):
     return render(request, 'admin_menu.html')
-
 
 @login_required
 def main_menu_view(request):
