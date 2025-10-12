@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 from .models import Account
 from django.core.exceptions import ValidationError
 
-# Get the user model (Account)
 Account = get_user_model()
 
 
@@ -28,15 +27,13 @@ class SignupForm(forms.ModelForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label='Email')  # Use email as username
+    username = forms.EmailField(label='Email') 
 
     def clean(self):
         email = self.cleaned_data.get('username')
         password = self.cleaned_data.get('password')
 
-        # Check if the email exists before authenticating
         if email and not Account.objects.filter(email=email).exists():
             raise forms.ValidationError("No account found with this email. Please sign up first.")
 
-        # Proceed with normal authentication
         return super().clean()
