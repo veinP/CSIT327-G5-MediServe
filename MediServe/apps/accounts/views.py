@@ -16,12 +16,12 @@ def signup_view(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        # Check if passwords match
+        # if passwords match
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
             return render(request, 'signup.html', {'form': form})
 
-        # Check if email already exists
+        # if email already exists
         if Account.objects.filter(email=email).exists():
             messages.error(request, 'An account with this email already exists.')
             return render(request, 'signup.html', {'form': form})
