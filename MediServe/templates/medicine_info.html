@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -48,7 +49,7 @@
                 <p style="margin: 0;">
                     <strong>Current Stock:</strong>
                     <span style="font-weight: bold; color: {% if medicine.stock_quantity > 10 %}#28a745{% else %}#dc3545{% endif %};">
-                        {{ medicine.stock_quantity }} units in stock
+                        {{ medicine.stock_quantity }} Units in stock
                     </span>
                     {% if medicine.stock_quantity == 0 %}
                         <br><small style="color: #dc3545;">*This item is currently out of stock.*</small>
@@ -62,7 +63,7 @@
                 <label for="amount" style="font-weight: bold; margin-bottom: 5px; display: block;">Quantity to Order:</label>
                 <input type="number" id="amount" name="amount" min="1" value="1" max="{{ medicine.stock_quantity }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
 
-                <label for="request" style="font-weight: bold; margin-bottom: 5px; display: block;">Special Request (Optional):</label>
+                <label for="request" style="font-weight: bold; margin-bottom: 5px; display: block;">Special Request(Optional):</label>
                 <textarea id="request" name="special_request" rows="3" placeholder="e.g., Request specific brand or note for delivery." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 25px;"></textarea>
 
                 <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px 0;">
