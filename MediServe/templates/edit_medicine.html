@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -7,7 +8,7 @@
     <div class="left-panel" style="flex: 0.3; background-color: #f7f9fa; padding: 20px;">
         <h3 style="color: #dc3545; margin-bottom: 20px;">Current Stock</h3>
         <h1 style="color: #36489e; font-size: 3em;">{{ medicine.stock_quantity }}</h1>
-        <p style="color: #555;">Units available</p>
+        <p style="color: #555;">Units Available</p>
         <a href="{% url 'medicine_stock' %}" class="btn-secondary" style="width: 100%; margin-top: 30px;">
             <i class="fas fa-arrow-left"></i> Back to Stock List
         </a>
