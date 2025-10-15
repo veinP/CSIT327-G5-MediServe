@@ -3,10 +3,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Medicine
 from .forms import MedicineForm
 from django.contrib import messages
-
-@login_required
-def medicine_list(request):
-    return render(request, 'medicine_list.html')
+from supabase import create_client
+from django.conf import settings
 
 @login_required
 def medicine_history(request):
@@ -44,4 +42,25 @@ def edit_medicine(request, id):
 def delete_medicine(request, id):
     # delete medicine and redirect with a message
     pass
+
+
+def medicine_list(request):
+    supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
+    # Fetch all medicines
+    response = supabase.table("tblmedicine").select("*").execute()
+    medicines = response.data if response.data else []
+
+    # Optional: sort or filter before sending to template
+    medicines = sorted(medicines, key=lambda x: x.get('name', '').lower())
+
+    return render(request, 'medicine_list.html', {
+        'medicines': medicines
+    })
+
+def medicine_info(request, medicine_id):
+    from .models import Medicine
+    medicine = Medicine.objects.get(id=medicine_id)
+    return render(request, 'medicine_info.html', {'medicine': medicine})
+
 

@@ -8,4 +8,6 @@ urlpatterns = [
     path('records/', views.medicine_records, name='medicine_records'),  # ✅ added
     path('edit/<int:id>/', views.edit_medicine, name='edit_medicine'),
     path('delete/<int:id>/', views.delete_medicine, name='delete_medicine'),
+    path('browse-medicines/', views.medicine_list, name='medicine_list'),
+    path('<int:medicine_id>/', views.medicine_info, name='medicine_info'),
 ]
