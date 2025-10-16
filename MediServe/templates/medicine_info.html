@@ -1,76 +1,113 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Medicine Info: {{ medicine.name }}{% endblock %}
+{% block title %}{{ medicine.name }} Info{% endblock %}
 
 {% block content %}
-    <div class="split-container">
-        <div class="left-panel" style="flex: 0.5; background-color: #f7f9fa; padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start;">
+<div style="width: 90%; max-width: 1000px; margin: 50px auto; background-color: #fff;
+            border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); padding: 35px 45px;">
 
-            <a href="{% url 'medicine_list' %}" class="btn" style="
-                padding: 8px 10px;
-                margin-bottom: 30px;
-                background-color: #e6e9f0;
-                color: #36489e;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid #ddd;
-                text-decoration: none;
-                align-self: flex-start; /* Ensures the button aligns to the start/left */
-            ">
-                <i class="fas fa-arrow-left"></i>
-            </a>
+    <!-- Back Button -->
+    <div style="margin-bottom: 20px;">
+        <a href="{% url 'medicine_list' %}" style="
+            text-decoration: none; color: #4b5bdc; background-color: #f5f6fc;
+            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+            width: 40px; height: 40px; border: 1px solid #e2e5f3; transition: 0.25s ease;">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
 
-            <h3 style="color: #36489e; margin-bottom: 20px;"></h3>
-
-            <div class="image-viewer" style="width: 100%; height: 90%; min-height: 300px; background-color: #eee; border: 1px solid #ddd; display: flex; justify-content: center; align-items: center; border-radius: 8px; margin-bottom: 10px;">
-                <img src="{% static 'core/img/Medicine Imagee.png' %}" alt="{{ medicine.name }} Image" style="max-width: 100%; max-height: 100%; object-fit: contain;">
-            </div>
-            <p style="text-align: center; color: #555;">Enlarged view</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; justify-content: space-between;">
+        <!-- LEFT: Medicine Image -->
+        <div style="flex: 1 1 40%; background-color: #f8f9fc; border-radius: 10px;
+                    display: flex; justify-content: center; align-items: center;
+                    padding: 25px; min-height: 260px; border: 1px solid #e7eaf3;">
+            {% if medicine.image %}
+                <img src="{{ medicine.image.url }}" alt="{{ medicine.name }} Image"
+                     style="max-width: 85%; max-height: 200px; object-fit: contain; border-radius: 8px;">
+            {% else %}
+                <img src="{% static 'img/Medicine Imagee.png' %}" alt="No Image"
+                     style="width: 150px; opacity: 0.7;">
+            {% endif %}
         </div>
 
-        <div class="right-panel" style="flex: 0.5; background-color: #FFFFFF; color: #36489e; text-align: left; padding: 40px; display: flex; flex-direction: column; overflow-y: auto;">
+        <!-- RIGHT: Medicine Details -->
+        <div style="flex: 1 1 50%;">
+            <h2 style="color: #2f3a8f; font-size: 1.9em; font-weight: 700; margin-bottom: 6px;">
+                {{ medicine.name }}
+            </h2>
 
-            <h2 style="margin-bottom: 5px;">{{ medicine.name }}</h2>
-            <p style="color: #555; font-size: 1.1em; margin-bottom: 20px;">{{ medicine.dosage }} | {{ medicine.formulation }}</p>
-
-            <strong style="font-size: 2em; color: #dc3545; margin-bottom: 15px;">P{{ medicine.price|floatformat:2 }} / unit</strong>
-
-            <p style="margin-bottom: 20px;">
-                <strong>Description:</strong> {{ medicine.description|default:"No description provided." }}
-            </p>
-
-            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; margin-bottom: 30px;">
-                <p style="margin: 0;">
-                    <strong>Current Stock:</strong>
-                    <span style="font-weight: bold; color: {% if medicine.stock_quantity > 10 %}#28a745{% else %}#dc3545{% endif %};">
-                        {{ medicine.stock_quantity }} Units in stock
-                    </span>
-                    {% if medicine.stock_quantity == 0 %}
-                        <br><small style="color: #dc3545;">*This item is currently out of stock.*</small>
-                    {% endif %}
+            {% if medicine.brand or medicine.category %}
+                <p style="color: #555; font-size: 0.95em; margin-bottom: 10px;">
+                    {% if medicine.brand %}<strong>Brand:</strong> {{ medicine.brand }}<br>{% endif %}
+                    {% if medicine.category %}<strong>Category:</strong> {{ medicine.category }}{% endif %}
                 </p>
-            </div>
+            {% endif %}
 
-            <form action="{% url 'add_to_order' medicine_id=medicine.id %}" method="post" style="width: 100%;">
+            {% if medicine.dosage %}
+                <p style="font-size: 0.9em; color: #666; margin-bottom: 12px;">
+                    <strong>Dosage:</strong> {{ medicine.dosage }}
+                </p>
+            {% endif %}
+
+            <h3 style="color: #d93025; font-size: 1.6em; font-weight: 700; margin: 10px 0 12px;">
+                ₱{{ medicine.price|floatformat:2 }}
+                <span style="font-size: 0.75em; color: #888;">/ unit</span>
+            </h3>
+
+            {% if medicine.description %}
+                <p style="color: #444; font-size: 0.95em; line-height: 1.5; margin-bottom: 16px;">
+                    <strong>Description:</strong> {{ medicine.description }}
+                </p>
+            {% endif %}
+
+            <!-- Stock Indicator -->
+            {% with stock=medicine.stock_quantity %}
+                <div style="display: inline-block; padding: 8px 14px; border-radius: 6px;
+                            background-color: {% if stock > 10 %}#e9f8ee{% elif stock > 0 %}#fff6e5{% else %}#fdecea{% endif %};
+                            color: {% if stock > 10 %}#237a3b{% elif stock > 0 %}#b7791f{% else %}#b00020{% endif %};
+                            font-weight: 600; font-size: 0.9em; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
+                    {{ stock }} units in stock
+                </div>
+            {% endwith %}
+
+            <!-- Order Form -->
+            <form method="POST" style="display: flex; flex-direction: column; gap: 12px; width: 95%; margin-top: 10px;">
                 {% csrf_token %}
+                <div>
+                    <label style="font-weight: 600; color: #333; font-size: 0.9em;">Quantity to Order:</label>
+                    <input type="number" name="quantity" min="1" max="{{ medicine.stock_quantity }}" value="1"
+                           style="width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9em;">
+                </div>
 
-                <label for="amount" style="font-weight: bold; margin-bottom: 5px; display: block;">Quantity to Order:</label>
-                <input type="number" id="amount" name="amount" min="1" value="1" max="{{ medicine.stock_quantity }}" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
+                <div>
+                    <label style="font-weight: 600; color: #333; font-size: 0.9em;">Special Request (Optional):</label>
+                    <textarea name="special_request" rows="2"
+                              placeholder="e.g., Request specific brand or delivery note."
+                              style="width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px;
+                                     font-size: 0.9em; resize: none;"></textarea>
+                </div>
 
-                <label for="request" style="font-weight: bold; margin-bottom: 5px; display: block;">Special Request(Optional):</label>
-                <textarea id="request" name="special_request" rows="3" placeholder="e.g., Request specific brand or note for delivery." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 25px;"></textarea>
-
-                <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px 0;">
-                    <i class="fas fa-cart-plus"></i> Add to Order
+                <button type="submit"
+                        {% if medicine.stock_quantity == 0 %}disabled{% endif %}
+                        style="padding: 10px; border: none; border-radius: 6px;
+                               background-color: {% if medicine.stock_quantity == 0 %}#b5b5b5{% else %}#4b5bdc{% endif %};
+                               color: white; font-size: 0.95em; font-weight: 600;
+                               cursor: {% if medicine.stock_quantity == 0 %}not-allowed{% else %}pointer{% endif %};
+                               transition: 0.25s ease;">
+                    <i class="fas fa-cart-plus"></i>
+                    {% if medicine.stock_quantity == 0 %} Out of Stock {% else %} Add to Order {% endif %}
                 </button>
             </form>
-
         </div>
     </div>
+</div>
+
+<!-- Button Hover -->
+<script>
+    document.querySelectorAll('a[href]').forEach(btn => {
+        btn.addEventListener('mouseenter', () => btn.style.backgroundColor = '#e8ebff');
+        btn.addEventListener('mouseleave', () => btn.style.backgroundColor = '#f5f6fc');
+    });
+</script>
 {% endblock %}
