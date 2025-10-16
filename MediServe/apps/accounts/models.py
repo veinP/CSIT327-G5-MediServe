@@ -5,7 +5,6 @@ import uuid
 
 class AccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        """Create and save a regular user with the given email and password."""
         if not email:
             raise ValueError("Users must have an email address")
 
@@ -16,7 +15,6 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Create and save a superuser (admin)."""
         extra_fields.setdefault('role', 'admin')
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
