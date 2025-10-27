@@ -21,8 +21,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border: 1px solid #ddd;
-                box-shadow: none;">
+                border: 1px solid #ddd;">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1 style="font-size: 1.5em; color: #dc3545;">Medicine Stock</h1>
@@ -71,68 +70,19 @@
 
         <div class="stock-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
             {% for medicine in medicines %}
-                {% with stock=medicine.stock_quantity %}
-                    {% if stock > 50 %}
-                        {% with color='#28a745' %}
-                            <div style="
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                border: 1px solid #ddd;
-                                border-left: 6px solid {{ color }};
-                                border-radius: 10px;
-                                padding: 15px 20px;
-                                background-color: #fff;
-                                transition: transform 0.2s ease, box-shadow 0.2s ease;
-                            "
-                            onmouseover="this.style.transform='scale(1.01)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)';"
-                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
-                                <div style="flex: 1;">
-                                    <h3 style="margin: 0; color: #36489e;">{{ medicine.name }}</h3>
-                                    <p style="margin: 4px 0; font-size: 0.95em; color: #555;">
-                                        <strong>Brand:</strong> {{ medicine.brand|default:"N/A" }}
-                                    </p>
-                                    <p style="margin: 2px 0; font-size: 0.9em; color: #777;">
-                                        <strong>Category:</strong> {{ medicine.category|default:"Uncategorized" }}
-                                    </p>
-                                    <p style="margin: 2px 0; font-size: 0.9em; color: #777;">
-                                        <strong>Expiry Date:</strong> {{ medicine.expiry_date|date:"M d, Y"|default:"—" }}
-                                    </p>
-                                </div>
-
-                                <div style="text-align: right;">
-                                    <p style="margin: 0; font-weight: bold; color: {{ color }};">
-                                        {{ medicine.stock_quantity }} pcs
-                                    </p>
-                                    <p style="margin: 4px 0; color: #28a745; font-weight: 600;">
-                                        ₱{{ medicine.price|floatformat:2 }}
-                                    </p>
-                                    <div style="display:flex; gap:6px; justify-content:flex-end; margin-top:8px;">
-                                        <a href="{% url 'edit_medicine' medicine.id %}"
-                                           style="padding:6px 10px; border-radius:5px; background-color:#007bff;
-                                                  color:white; text-decoration:none; font-size:0.85em;">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <a href="{% url 'delete_medicine' medicine.id %}"
-                                           onclick="return confirm('Are you sure you want to delete {{ medicine.name }}?');"
-                                           style="padding:6px 10px; border-radius:5px; background-color:#dc3545;
-                                                  color:white; text-decoration:none; font-size:0.85em;">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endwith %}
-                    {% elif stock > 10 %}
-                        {% with color='#ffc107' %}
-                            {% include 'medicine_stock_item.html' %}
-                        {% endwith %}
-                    {% else %}
-                        {% with color='#dc3545' %}
-                            {% include 'medicine_stock_item.html' %}
-                        {% endwith %}
-                    {% endif %}
-                {% endwith %}
+                {% if medicine.stock_quantity > 50 %}
+                    {% with color="#28a745" %}
+                        {% include 'medicine_stock_item.html' %}
+                    {% endwith %}
+                {% elif medicine.stock_quantity > 10 %}
+                    {% with color="#ffc107" %}
+                        {% include 'medicine_stock_item.html' %}
+                    {% endwith %}
+                {% else %}
+                    {% with color="#dc3545" %}
+                        {% include 'medicine_stock_item.html' %}
+                    {% endwith %}
+                {% endif %}
             {% empty %}
                 <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
                     No medicines currently in the inventory.

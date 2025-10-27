@@ -15,8 +15,7 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('settings/', views.settings_page, name='settings'),
     path('feedback/', views.feedback_page, name='feedback'),
-
-
+    path('announcements/', include('apps.announcements.urls')),
 
 
     # 📦 Include app routes

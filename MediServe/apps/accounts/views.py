@@ -4,9 +4,18 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import Account
+from supabase import create_client
+import os
+
+# Supabase connection
+SUPABASE_URL = os.getenv("SUPABASE_URL", "https://your-supabase-url.supabase.co")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY", "your-supabase-service-role-key")
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 
 def home_redirect(request):
     return redirect('login')
+
 
 def signup_view(request):
     if request.method == 'POST':
@@ -44,7 +53,7 @@ def signup_view(request):
 def login_view(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
-        email = request.POST.get('username')  
+        email = request.POST.get('username')
         password = request.POST.get('password')
 
         user_exists = Account.objects.filter(email=email).exists()
@@ -55,7 +64,7 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                
+
                 if user.is_staff or user.is_superuser:
                     return redirect('admin_menu')
                 else:
@@ -67,28 +76,45 @@ def login_view(request):
 
     return render(request, 'login.html', {'form': form})
 
+
 def logout_view(request):
     logout(request)
     messages.success(request, 'Logged out successfully.')
     return redirect('login')
 
+
 @login_required
 def admin_menu_view(request):
     return render(request, 'admin_menu.html')
 
+
 @login_required
 def main_menu_view(request):
-    return render(request, 'main_menu.html')
+    """Main menu view that includes the most recent announcement."""
+    latest_announcement = None
+    try:
+        response = supabase.table("tblannouncements").select("*").order("date_posted", desc=True).limit(1).execute()
+        if response.data:
+            latest_announcement = response.data[0]
+    except Exception as e:
+        print("Error fetching announcement:", e)
+
+    return render(request, 'main_menu.html', {
+        'latest_announcement': latest_announcement
+    })
 
 
 @login_required
 def profile_view(request):
     return render(request, 'profile_view.html', {'user': request.user})
 
+
 @login_required
 def settings_page(request):
     return render(request, 'settings.html')
 
+
 @login_required
 def feedback_page(request):
     return render(request, 'feedback.html')
+
