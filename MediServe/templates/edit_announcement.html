@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Announcement{% endblock %}
+
+{% block content %}
+<div style="width: 100%; max-width: 600px; margin: 50px auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <a href="{% url 'announcements' %}" style="color: #36489e; text-decoration: none;">
+        <i class="fas fa-arrow-left"></i> Back to Announcements
+    </a>
+
+    <h2 style="color:#36489e; margin-top:20px;">Edit Announcement</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Title:</label>
+        <input type="text" name="title" value="{{ announcement.title }}" required style="width:100%; margin-bottom:15px; padding:8px;">
+
+        <label>Content:</label>
+        <textarea name="content" rows="6" required style="width:100%; margin-bottom:20px; padding:8px;">{{ announcement.content }}</textarea>
+
+        <button type="submit" class="btn" style="background-color:#36489e; color:white; padding:10px 20px;">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
