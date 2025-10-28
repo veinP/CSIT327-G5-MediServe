@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -24,19 +25,19 @@
             </a>
         </header>
 
-        {# MAIN CONTENT AREA #}
+        
         <div style="padding: 40px; background-color: #f7f9fa;">
 
             <h2 style="color: #36489e; font-size: 1.8em; margin-bottom: 10px;">Welcome, Administrator</h2>
             <p style="color: #555; font-size: 1.1em; margin-bottom: 30px;">Manage inventory, orders, and announcements.</p>
 
-            {# ANNOUNCEMENT PREVIEW #}
+            
             <div style="border: 2px solid #ffc107; padding: 15px; border-radius: 5px; background-color: #fff; margin-bottom: 40px;">
                 <strong style="color: #dc3545;">Latest Announcement:</strong>
                 <p style="font-size: 0.9em; color: #555; margin-top: 5px;">{{ recent_announcement }}</p>
             </div>
 
-            {# ACTION BUTTON GRID (3x3 Layout) #}
+            
             <div class="menu-options" style="
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);

@@ -1,47 +1,53 @@
 {% extends 'base.html' %}
-
 {% block title %}User Login{% endblock %}
 
 {% block content %}
 <div style="width: 100%; max-width: 800px; margin: 0 auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); display: flex; overflow: hidden; min-height: 500px;">
-    <!-- Left Section: Login Form -->
+  
     <div style="flex: 0.6; background-color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
         <h2 style="color: #314297; margin-bottom: 20px;">Login</h2>
 
         {% if messages %}
+
             {% for message in messages %}
+
                 <div style="
                 {% if 'success' in message.tags %}
                     background-color: #e6ffed;cd
                     color: #1b7f36;
                     border: 1px solid #1b7f36;
+
                 {% elif 'error' in message.tags %}
                     background-color: #ffe6e6;
                     color: #d93025;
                     border: 1px solid #d93025;
+
                 {% else %}
                     background-color: #f7f9fa;
                     color: #333;
                     border: 1px solid #ccc;
-                {% endif %}
-                border-radius: 6px;
-                padding: 10px 14px;
-                font-weight: 600;
-                font-size: 0.95em;
-                text-align: center;
-                margin-bottom: 20px;
-                width: 100%;
-                max-width: 320px;">
-                {{ message }}
+
+                    {% endif %}
+                    border-radius: 6px;
+                    padding: 10px 14px;
+                    font-weight: 600;
+                    font-size: 0.95em;
+                    text-align: center;
+                    margin-bottom: 20px;
+                    width: 100%;
+                    max-width: 320px;">
+
+                    {{ message }}
+
             </div>
+
         {% endfor %}
+
     {% endif %}
 
 
         <form method="post" style="width: 100%; max-width: 300px;">
             {% csrf_token %}
-
-            <!-- ❌ Removed {{ form.non_field_errors }} so it won’t duplicate -->
 
             <input type="email" name="username" placeholder="Email" value="{{ form.username.value|default_if_none:'' }}" required
                    style="margin-bottom: 10px; width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
@@ -53,17 +59,27 @@
                     style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px 0; border: none; border-radius: 5px; font-weight: bold;">
                 <i class="fas fa-sign-in-alt"></i> Log In
             </button>
+
         </form>
+
     </div>
 
-    <!-- Right Section: Signup Prompt -->
     <div style="flex: 0.4; background-color: #31439d; color: #FFFFFF; padding: 40px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        
         <h2 style="color: #FFFFFF; margin-bottom: 15px;">New to MediServe?</h2>
+        
         <p style="color: #EEEEEE; margin-bottom: 30px;">Enter your personal details to get started with our system.</p>
+        
         <a href="{% url 'signup' %}" class="btn-secondary"
-           style="background-color: #FFFFFF; color: #36489e; padding: 12px 25px; border: none; border-radius: 5px; text-decoration: none; font-weight: bold;">
+         
+        style="background-color: #FFFFFF; color: #36489e; padding: 12px 25px; border: none; border-radius: 5px; text-decoration: none; font-weight: bold;">
             <i class="fas fa-user-plus"></i> Sign Up
+
         </a>
+
     </div>
+
 </div>
+
 {% endblock %}
+

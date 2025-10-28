@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+   {% block content %}
+   <div class="container mx-auto mt-10 bg-white rounded-2xl shadow-md text-center" style="max-width: 700px; background-color: #FFFFFF; padding: 60px 80px;">
+       <h2 class="text-2xl font-bold mb-6" style="color: #dc3545; font-size: 2em; margin-bottom: 30px;">
+           ⚠️ Confirm Deletion
+       </h2>
+       <p class="mb-8" style="color: #555; font-size: 1.2em; line-height: 1.8; margin-bottom: 40px;">
+           Are you sure you want to delete <strong style="color: #36489e;">{{ medicine.name }}</strong>?<br>
+           This action <span style="color: #dc3545; font-weight: 600;">cannot be undone.</span>
+       </p>
+
+       <form method="POST">
+           {% csrf_token %}
+           <div class="flex justify-center gap-4" style="gap: 20px; margin-top: 30px;">
+               <button 
+                   type="submit" 
+                   style="
+                       background-color: #dc3545; 
+                       color: #FFFFFF; 
+                       font-weight: 500; 
+                       padding: 15px 40px; 
+                       border-radius: 8px; 
+                       border: none;
+                       cursor: pointer;
+                       transition: all 0.3s ease;
+                       font-size: 1.1em;
+                       min-width: 180px;
+                   "
+                   onmouseover="this.style.backgroundColor='#c82333'"
+                   onmouseout="this.style.backgroundColor='#dc3545'"
+               >
+                   Yes, Delete
+               </button>
+               <a 
+                   href="{% url 'medicine_stock' %}" 
+                   style="
+                       background-color: #E3EBEE; 
+                       color: #36489e; 
+                       font-weight: 500; 
+                       padding: 15px 40px; 
+                       border-radius: 8px;
+                       text-decoration: none;
+                       display: inline-flex;
+                       align-items: center;
+                       justify-content: center;
+                       transition: all 0.3s ease;
+                       font-size: 1.1em;
+                       min-width: 180px;
+                       box-sizing: border-box;
+                   "
+                   onmouseover="this.style.backgroundColor='#d1dce0'"
+                   onmouseout="this.style.backgroundColor='#E3EBEE'"
+               >
+                   Cancel
+               </a>
+           </div>
+       </form>
+   </div>
+   {% endblock %}
