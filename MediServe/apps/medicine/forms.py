@@ -11,7 +11,6 @@ class MedicineForm(forms.ModelForm):
             'description',
             'stock_quantity',
             'expiry_date',
-            'price'
         ]
         widgets = {
             'expiry_date': forms.DateInput(attrs={'type': 'date'}),

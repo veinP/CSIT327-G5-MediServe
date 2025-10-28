@@ -25,7 +25,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    
     email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
@@ -42,7 +41,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        db_table = 'users'  
-        managed = False      
+        db_table = 'users'
+        managed = True  # Changed to True to allow Django migrations
+
     def __str__(self):
         return self.email
