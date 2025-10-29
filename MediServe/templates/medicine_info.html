@@ -4,110 +4,573 @@
 {% block title %}{{ medicine.name }} Info{% endblock %}
 
 {% block content %}
-<div style="width: 90%; max-width: 1000px; margin: 50px auto; background-color: #fff;
-            border-radius: 16px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); padding: 35px 45px;">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-    <!-- Back Button -->
-    <div style="margin-bottom: 20px;">
-        <a href="{% url 'medicine_list' %}" style="
-            text-decoration: none; color: #4b5bdc; background-color: #f5f6fc;
-            border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
-            width: 40px; height: 40px; border: 1px solid #e2e5f3; transition: 0.25s ease;">
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f5f7fa;
+        min-height: 100vh;
+    }
+
+    /* Change: Reduced max-width further from 850px to 750px for a much smaller horizontal rectangle */
+    .page-container {
+        width: 100%;
+        max-width: 1100px; /* MADE THE RECTANGLE SMALLER (HORIZONTAL) */
+        margin: 0 auto;
+        background-color: #FFFFFF;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Header */
+    .page-header {
+        /* Reduced padding to match smaller container */
+        padding: 18px 25px; 
+        background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .btn-back {
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #FFFFFF;
+        border-radius: 10px;
+        width: 38px; /* Reduced size slightly */
+        height: 38px; /* Reduced size slightly */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-back:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        transform: translateX(-3px);
+    }
+
+    .page-title {
+        font-size: 1.5em; /* Reduced font size slightly */
+        color: #FFFFFF;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+
+    /* Main Content */
+    .main-content {
+        /* Reduced padding to match smaller container */
+        padding: 25px;
+    }
+
+    .medicine-grid {
+        display: grid;
+        /* Adjusted the image column width to be smaller */
+        grid-template-columns: 240px 1fr;
+        /* Reduced gap */
+        gap: 25px; 
+        margin-bottom: 25px;
+    }
+
+    /* Image Section */
+    .image-section {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e8ecf5 100%);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px; /* Reduced padding */
+        /* Reduced height to maintain a good aspect ratio in a smaller container */
+        height: 220px; 
+        border: 2px solid #E3EBEE;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .image-section::before {
+        content: '';
+        position: absolute;
+        width: 120px; /* Reduced size */
+        height: 120px; /* Reduced size */
+        background: radial-gradient(circle, rgba(54, 72, 158, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -40px;
+        right: -40px;
+    }
+
+    .medicine-img {
+        max-width: 90%;
+        max-height: 180px; /* Adjusted max-height to fit the new image section height */
+        object-fit: contain;
+        border-radius: 8px;
+        position: relative;
+        z-index: 1;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    }
+
+    .no-image-placeholder {
+        text-align: center;
+        color: #9ca3af;
+    }
+
+    .no-image-placeholder i {
+        font-size: 3.5em; /* Reduced size */
+        opacity: 0.3;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .no-image-placeholder p {
+        font-size: 0.9em;
+    }
+
+    /* Details Section */
+    .details-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .medicine-name {
+        color: #1a202c;
+        font-size: 1.8em; /* Reduced font size */
+        font-weight: 700;
+        margin-bottom: 5px;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+    }
+
+    .free-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px; /* Reduced padding */
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border-radius: 7px;
+        font-size: 0.75em; /* Reduced font size */
+        color: #155724;
+        font-weight: 700;
+        border: 1px solid #b1dfbb;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .free-tag i {
+        font-size: 0.9em;
+    }
+
+    /* Badges Row */
+    .badges-row {
+        display: flex;
+        gap: 8px; /* Reduced gap */
+        flex-wrap: wrap;
+        margin-bottom: 5px;
+    }
+
+    .info-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px; /* Reduced padding */
+        border-radius: 7px;
+        font-size: 0.8em; /* Reduced font size */
+        font-weight: 600;
+        background-color: #f0f4f8;
+        color: #36489e;
+        border: 1px solid #d9e2ec;
+    }
+
+    .info-badge i {
+        font-size: 0.9em;
+        opacity: 0.8;
+    }
+
+    /* Info Boxes */
+    .info-box {
+        padding: 10px 12px; /* Reduced padding */
+        background-color: #f8f9fc;
+        border-radius: 9px;
+        border-left: 3px solid #36489e; /* Reduced border size */
+        margin-bottom: 8px;
+    }
+
+    .info-box-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #36489e;
+        font-weight: 700;
+        font-size: 0.75em; /* Reduced font size */
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-box-label i {
+        font-size: 1em;
+    }
+
+    .info-box-content {
+        color: #374151;
+        font-size: 0.88em; /* Reduced font size slightly */
+        line-height: 1.5;
+    }
+
+    .description-box {
+        padding: 12px; /* Reduced padding */
+        background-color: #ffffff;
+        border: 1px solid #e5e7eb; /* Reduced border thickness */
+        border-radius: 9px;
+    }
+
+    .description-box-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #36489e;
+        font-weight: 700;
+        font-size: 0.75em; /* Reduced font size */
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .description-box-content {
+        color: #4b5563;
+        font-size: 0.88em; /* Reduced font size slightly */
+        line-height: 1.6;
+    }
+
+    /* Stock Badge */
+    .stock-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px; /* Reduced padding */
+        border-radius: 20px; /* Adjusted border radius */
+        font-weight: 700;
+        font-size: 0.8em; /* Reduced font size */
+        margin-top: 5px;
+    }
+
+    .stock-available {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .stock-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+
+    .stock-unavailable {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .stock-status i {
+        font-size: 1em;
+    }
+
+    /* Order Form Section */
+    .order-form-section {
+        /* Reduced max-width slightly to match the smaller container, but since you said I can expand the width, I will leave the max-width relative to the page-container */
+        max-width: 100%; 
+        background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+        padding: 20px; /* Reduced padding */
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .form-title {
+        color: #1a202c;
+        font-size: 1.1em; /* Reduced font size */
+        font-weight: 700;
+        margin-bottom: 15px; /* Reduced margin */
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .form-title i {
+        color: #36489e;
+        font-size: 1em;
+    }
+
+    .order-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; /* Reduced gap */
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px; /* Reduced gap */
+    }
+
+    .form-field label {
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.85em; /* Reduced font size */
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .form-field label i {
+        color: #36489e;
+        font-size: 0.9em;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 0.88em; /* Reduced font size slightly */
+        transition: all 0.3s ease;
+        font-family: inherit;
+        background-color: #ffffff;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: #36489e;
+        box-shadow: 0 0 0 3px rgba(54, 72, 158, 0.1); /* Reduced box shadow */
+    }
+
+    .form-input:disabled {
+        background-color: #f3f4f6;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .form-textarea {
+        resize: vertical;
+        min-height: 70px; /* Reduced min-height */
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px 18px; /* Reduced padding */
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 0.95em; /* Reduced font size slightly */
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: inherit;
+        margin-top: 8px;
+    }
+
+    .submit-btn:not(:disabled) {
+        background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
+        box-shadow: 0 3px 10px rgba(54, 72, 158, 0.2); /* Reduced box shadow */
+    }
+
+    .submit-btn:not(:disabled):hover {
+        background: linear-gradient(135deg, #2a3875 0%, #36489e 100%);
+        transform: translateY(-1px); /* Reduced hover lift */
+        box-shadow: 0 4px 15px rgba(54, 72, 158, 0.3); /* Reduced hover box shadow */
+    }
+
+    .submit-btn:not(:disabled):active {
+        transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    .submit-btn i {
+        font-size: 1.1em;
+    }
+
+    /* Responsive */
+    @media (max-width: 750px) { /* Changed 850px to 750px to match new max-width */
+        .medicine-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .image-section {
+            height: 200px; /* Adjusted height for mobile stacking */
+        }
+
+        .order-form-section {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .page-header {
+            padding: 15px 20px;
+        }
+
+        .page-title {
+            font-size: 1.2em;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .medicine-name {
+            font-size: 1.5em;
+        }
+
+        .order-form-section {
+            padding: 20px 15px;
+        }
+    }
+</style>
+
+<div class="page-container">
+    <div class="page-header">
+        <a href="{% url 'medicine_list' %}" class="btn-back">
             <i class="fas fa-arrow-left"></i>
         </a>
+        <h1 class="page-title">Medicine Details</h1>
     </div>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; justify-content: space-between;">
-        <!-- LEFT: Medicine Image -->
-        <div style="flex: 1 1 40%; background-color: #f8f9fc; border-radius: 10px;
-                    display: flex; justify-content: center; align-items: center;
-                    padding: 25px; min-height: 260px; border: 1px solid #e7eaf3;">
-            {% if medicine.image %}
-                <img src="{{ medicine.image.url }}" alt="{{ medicine.name }} Image"
-                     style="max-width: 85%; max-height: 200px; object-fit: contain; border-radius: 8px;">
-            {% else %}
-                <img src="{% static 'img/Medicine Imagee.png' %}" alt="No Image"
-                     style="width: 150px; opacity: 0.7;">
-            {% endif %}
+    <div class="main-content">
+        <div class="medicine-grid">
+            <div class="image-section">
+                {% if medicine.image %}
+                    <img src="{{ medicine.image.url }}" alt="{{ medicine.name }}" class="medicine-img">
+                {% else %}
+                    <div class="no-image-placeholder">
+                        <i class="fas fa-pills"></i>
+                        <p>No image available</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="details-section">
+                <div>
+                    <h2 class="medicine-name">{{ medicine.name }}</h2>
+                    
+                    <div class="free-tag">
+                        <i class="fas fa-gift"></i>
+                        Free Medicine
+                    </div>
+
+                    <div class="badges-row">
+                        {% if medicine.brand %}
+                            <span class="info-badge">
+                                <i class="fas fa-tag"></i>
+                                {{ medicine.brand }}
+                            </span>
+                        {% endif %}
+                        {% if medicine.category %}
+                            <span class="info-badge">
+                                <i class="fas fa-folder"></i>
+                                {{ medicine.category }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if medicine.dosage %}
+                    <div class="info-box">
+                        <div class="info-box-label">
+                            <i class="fas fa-prescription-bottle"></i>
+                            Dosage Information
+                        </div>
+                        <div class="info-box-content">{{ medicine.dosage }}</div>
+                    </div>
+                {% endif %}
+
+                {% if medicine.description %}
+                    <div class="description-box">
+                        <div class="description-box-label">
+                            <i class="fas fa-info-circle"></i>
+                            Description
+                        </div>
+                        <div class="description-box-content">{{ medicine.description }}</div>
+                    </div>
+                {% endif %}
+
+                {% with stock=medicine.stock_quantity %}
+                    <div class="stock-status {% if stock == 0 %}stock-unavailable{% elif stock <= 10 %}stock-warning{% else %}stock-available{% endif %}">
+                        {% if stock == 0 %}
+                            <i class="fas fa-times-circle"></i> Out of Stock
+                        {% elif stock <= 10 %}
+                            <i class="fas fa-exclamation-circle"></i> {{ stock }} units in stock
+                        {% else %}
+                            <i class="fas fa-check-circle"></i> {{ stock }} units in stock
+                        {% endif %}
+                    </div>
+                {% endwith %}
+            </div>
         </div>
 
-        <!-- RIGHT: Medicine Details -->
-        <div style="flex: 1 1 50%;">
-            <h2 style="color: #2f3a8f; font-size: 1.9em; font-weight: 700; margin-bottom: 6px;">
-                {{ medicine.name }}
-            </h2>
+        <div class="order-form-section">
+            <div class="form-title">
+                <i class="fas fa-shopping-cart"></i>
+                Place Your Order
+            </div>
 
-            {% if medicine.brand or medicine.category %}
-                <p style="color: #555; font-size: 0.95em; margin-bottom: 10px;">
-                    {% if medicine.brand %}<strong>Brand:</strong> {{ medicine.brand }}<br>{% endif %}
-                    {% if medicine.category %}<strong>Category:</strong> {{ medicine.category }}{% endif %}
-                </p>
-            {% endif %}
-
-            {% if medicine.dosage %}
-                <p style="font-size: 0.9em; color: #666; margin-bottom: 12px;">
-                    <strong>Dosage:</strong> {{ medicine.dosage }}
-                </p>
-            {% endif %}
-
-            <h3 style="color: #d93025; font-size: 1.6em; font-weight: 700; margin: 10px 0 12px;">
-                ₱{{ medicine.price|floatformat:2 }}
-                <span style="font-size: 0.75em; color: #888;">/ unit</span>
-            </h3>
-
-            {% if medicine.description %}
-                <p style="color: #444; font-size: 0.95em; line-height: 1.5; margin-bottom: 16px;">
-                    <strong>Description:</strong> {{ medicine.description }}
-                </p>
-            {% endif %}
-
-            <!-- Stock Indicator -->
-            {% with stock=medicine.stock_quantity %}
-                <div style="display: inline-block; padding: 8px 14px; border-radius: 6px;
-                            background-color: {% if stock > 10 %}#e9f8ee{% elif stock > 0 %}#fff6e5{% else %}#fdecea{% endif %};
-                            color: {% if stock > 10 %}#237a3b{% elif stock > 0 %}#b7791f{% else %}#b00020{% endif %};
-                            font-weight: 600; font-size: 0.9em; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 20px;">
-                    {{ stock }} units in stock
-                </div>
-            {% endwith %}
-
-            <!-- Order Form -->
-            <form method="POST" style="display: flex; flex-direction: column; gap: 12px; width: 95%; margin-top: 10px;">
+            <form method="POST" action="{% url 'medicine_info' medicine_id=medicine.id %}" class="order-form">
                 {% csrf_token %}
-                <div>
-                    <label style="font-weight: 600; color: #333; font-size: 0.9em;">Quantity to Order:</label>
-                    <input type="number" name="quantity" min="1" max="{{ medicine.stock_quantity }}" value="1"
-                           style="width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9em;">
+                
+                <div class="form-field">
+                    <label for="quantity">
+                        <i class="fas fa-sort-numeric-up"></i>
+                        Quantity to Order:
+                    </label>
+                    <input type="number" 
+                           id="quantity" 
+                           name="quantity" 
+                           min="1" 
+                           max="{{ medicine.stock_quantity }}" 
+                           value="1" 
+                           class="form-input"
+                           {% if medicine.stock_quantity == 0 %}disabled{% endif %} 
+                           required>
                 </div>
 
-                <div>
-                    <label style="font-weight: 600; color: #333; font-size: 0.9em;">Special Request (Optional):</label>
-                    <textarea name="special_request" rows="2"
+                <div class="form-field">
+                    <label for="specialRequest">
+                        <i class="fas fa-comment-dots"></i>
+                        Special Request (Optional):
+                    </label>
+                    <textarea id="specialRequest" 
+                              name="special_request" 
+                              class="form-input form-textarea"
                               placeholder="e.g., Request specific brand or delivery note."
-                              style="width: 100%; padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px;
-                                     font-size: 0.9em; resize: none;"></textarea>
+                              {% if medicine.stock_quantity == 0 %}disabled{% endif %}></textarea>
                 </div>
 
-                <button type="submit"
-                        {% if medicine.stock_quantity == 0 %}disabled{% endif %}
-                        style="padding: 10px; border: none; border-radius: 6px;
-                               background-color: {% if medicine.stock_quantity == 0 %}#b5b5b5{% else %}#4b5bdc{% endif %};
-                               color: white; font-size: 0.95em; font-weight: 600;
-                               cursor: {% if medicine.stock_quantity == 0 %}not-allowed{% else %}pointer{% endif %};
-                               transition: 0.25s ease;">
-                    <i class="fas fa-cart-plus"></i>
-                    {% if medicine.stock_quantity == 0 %} Out of Stock {% else %} Add to Order {% endif %}
+                <button type="submit" class="submit-btn" {% if medicine.stock_quantity == 0 %}disabled{% endif %}>
+                    {% if medicine.stock_quantity == 0 %}
+                        <i class="fas fa-ban"></i> Out of Stock
+                    {% else %}
+                        <i class="fas fa-cart-plus"></i> Add to Order
+                    {% endif %}
                 </button>
             </form>
         </div>
     </div>
 </div>
-
-<!-- Button Hover -->
-<script>
-    document.querySelectorAll('a[href]').forEach(btn => {
-        btn.addEventListener('mouseenter', () => btn.style.backgroundColor = '#e8ebff');
-        btn.addEventListener('mouseleave', () => btn.style.backgroundColor = '#f5f6fc');
-    });
-</script>
 {% endblock %}
+pull.
