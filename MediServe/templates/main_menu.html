@@ -4,130 +4,472 @@
 {% block title %}Main Menu{% endblock %}
 
 {% block content %}
-<div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.05); overflow: hidden;">
+<style>
+    body {
+        background: linear-gradient(135deg, #E3EBEE 0%, #FFFFFF 100%);
+        min-height: 100vh;
+    }
+    
+    .main-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 40px auto;
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(54, 72, 158, 0.12);
+        overflow: hidden;
+    }
+    
+    .top-header {
+        padding: 20px 40px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #E3EBEE 100%);
+        border-bottom: 2px solid #E3EBEE;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .logo-section {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .logo-section img {
+        width: 110px;
+        height: auto;
+        filter: drop-shadow(0 2px 8px rgba(54, 72, 158, 0.15));
+    }
+    
+    .logo-text h1 {
+        font-size: 1.5em;
+        color: #36489e;
+        margin: 0;
+        font-weight: 700;
+    }
+    
+    .logo-text p {
+        font-size: 0.8em;
+        color: #666;
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .btn-logout {
+        background-color: #FFFFFF;
+        color: #36489e;
+        border: 2px solid #E3EBEE;
+        padding: 10px 20px;
+        font-weight: 600;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .btn-logout:hover {
+        background-color: #BFB9FA;
+        border-color: #BFB9FA;
+        transform: translateY(-2px);
+    }
+    
+    .content-area {
+        padding: 40px;
+        background-color: #FFFFFF;
+    }
+    
+    .welcome-section h1 {
+        color: #36489e;
+        font-size: 2.4em;
+        margin-bottom: 8px;
+        font-weight: 700;
+    }
+    
+    .welcome-section p {
+        color: #666;
+        font-size: 1.15em;
+        margin-bottom: 40px;
+    }
+    
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 50px;
+    }
+    
+    .menu-btn {
+        background: linear-gradient(135deg, #36489e 0%, #4a5fb8 100%);
+        color: #FFFFFF;
+        padding: 18px 12px;
+        font-size: 0.95em;
+        font-weight: 600;
+        border-radius: 12px;
+        text-decoration: none;
+        text-align: center;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 4px 15px rgba(54, 72, 158, 0.25);
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+    }
+    
+    .menu-btn:hover {
+        background: linear-gradient(135deg, #2a3875 0%, #36489e 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(54, 72, 158, 0.35);
+    }
+    
+    .menu-btn i {
+        font-size: 1.8em;
+    }
+    
+    .announcement-section h3 {
+        color: #36489e;
+        font-size: 1.6em;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #BFB9FA;
+        font-weight: 700;
+    }
+    
+    .announcement-card {
+        background: linear-gradient(135deg, #FFFFFF 0%, #E3EBEE 100%);
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 5px solid #36489e;
+        box-shadow: 0 2px 8px rgba(54, 72, 158, 0.08);
+        transition: all 0.3s ease;
+    }
+    
+    .announcement-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(54, 72, 158, 0.15);
+    }
+    
+    .announcement-card strong {
+        font-size: 1.1em;
+        color: #36489e;
+        display: block;
+        margin-bottom: 8px;
+    }
+    
+    .announcement-card p {
+        font-size: 0.95em;
+        color: #555;
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+    
+    .announcement-date {
+        font-size: 0.85em;
+        color: #777;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .announcement-link {
+        font-size: 0.95em;
+        color: #36489e;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .announcement-link:hover {
+        color: #2a3875;
+        gap: 10px;
+    }
+    
+    .no-announcement {
+        background-color: #E3EBEE;
+        padding: 20px;
+        border-radius: 12px;
+        border-left: 5px solid #BFB9FA;
+    }
+    
+    .no-announcement p {
+        font-size: 0.95em;
+        color: #666;
+        margin: 0;
+    }
+    
+    .profile-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 0;
+        background-color: #FFFFFF;
+        box-shadow: -6px 0 30px rgba(54, 72, 158, 0.2);
+        z-index: 1000;
+        overflow-x: hidden;
+        transition: 0.4s ease;
+        padding-left: 0;
+    }
+    
+    .sidebar-content {
+        padding: 25px;
+        width: 300px;
+    }
+    
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 32px;
+        border: none;
+        background: none;
+        color: #36489e;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .close-btn:hover {
+        color: #d93025;
+        transform: rotate(90deg);
+    }
+    
+    .sidebar-content h3 {
+        color: #36489e;
+        margin-bottom: 30px;
+        padding-top: 25px;
+        font-size: 1.5em;
+        font-weight: 700;
+    }
+    
+    .profile-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #E3EBEE;
+    }
+    
+    .profile-header i {
+        font-size: 3em;
+        color: #36489e;
+        background: linear-gradient(135deg, #E3EBEE 0%, #BFB9FA 100%);
+        padding: 20px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+    }
+    
+    .profile-header p {
+        font-size: 1.15em;
+        font-weight: 700;
+        margin: 8px 0 0 0;
+        color: #36489e;
+    }
+    
+    .profile-header small {
+        color: #666;
+        font-size: 0.9em;
+    }
+    
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .sidebar-link {
+        text-decoration: none;
+        color: #36489e;
+        padding: 12px 15px;
+        border-radius: 10px;
+        background-color: #E3EBEE;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 500;
+    }
+    
+    .sidebar-link:hover {
+        background-color: #BFB9FA;
+        transform: translateX(5px);
+    }
+    
+    .sidebar-link i {
+        width: 20px;
+        text-align: center;
+    }
+    
+    .btn-sidebar-logout {
+        width: 100%;
+        margin-top: 40px;
+        background: linear-gradient(135deg, #d93025 0%, #f44336 100%);
+        color: #FFFFFF;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(217, 48, 37, 0.3);
+    }
+    
+    .btn-sidebar-logout:hover {
+        background: linear-gradient(135deg, #b71c1c 0%, #d93025 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(217, 48, 37, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .menu-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .content-area {
+            padding: 25px;
+        }
+        
+        .top-header {
+            padding: 15px 25px;
+        }
+    }
+</style>
 
+<div class="main-container">
     <!-- TOP HEADER BAR -->
-    <header style="padding: 15px 40px; background-color: #FFFFFF; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center;">
-        <div style="display: flex; align-items: center;">
-            <img src="{% static 'img/MediServe.png' %}" alt="MediServe Logo" style="width: 100px; height: 40px; margin-right: 10px;">
-            <div>
-                <h1 style="font-size: 1.4em; color: #36489e; margin: 0;">MediServe</h1>
-                <p style="font-size: 0.8em; color: #555; margin: 0; line-height: 1;">Community Health Partner</p>
+    <header class="top-header">
+        <div class="logo-section">
+            <img src="{% static 'img/MediServe.png' %}" alt="MediServe Logo">
+            <div class="logo-text">
+                <h1>MediServe</h1>
+                <p>Community Health Partner</p>
             </div>
         </div>
 
         <!-- LOGOUT BUTTON -->
-        <a href="{% url 'logout' %}" class="btn-secondary" style="
-            background-color: #FFFFFF;
-            color: #36489e;
-            border: 1px solid #ddd;
-            padding: 8px 15px;
-            font-weight: 500;">
+        <a href="{% url 'logout' %}" class="btn-logout">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </header>
 
     <!-- MAIN CONTENT AREA -->
-    <div style="padding: 40px; background-color: #f7f9fa;">
-
-        <h1 style="color: #36489e; font-size: 2.2em; margin-bottom: 5px;">Welcome Back!</h1>
-        <p style="color: #555; font-size: 1.1em; margin-bottom: 40px;">What would you like to do today?</p>
+    <div class="content-area">
+        <div class="welcome-section">
+            <h1>Welcome Back!</h1>
+            <p>What would you like to do today?</p>
+        </div>
 
         <!-- ACTION BUTTON GRID -->
-        <div class="menu-options" style="
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            width: 100%;
-        ">
-            <button onclick="toggleProfileSidebar(true)" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-user-circle"></i> View Profile
+        <div class="menu-grid">
+            <button onclick="toggleProfileSidebar(true)" class="menu-btn">
+                <i class="fas fa-user-circle"></i>
+                <span>View Profile</span>
             </button>
 
-            <a href="{% url 'medicine_list' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-prescription-bottle-alt"></i> Browse Medicines
+            <a href="{% url 'medicine_list' %}" class="menu-btn">
+                <i class="fas fa-prescription-bottle-alt"></i>
+                <span>Browse Medicines</span>
             </a>
 
-            <a href="{% url 'order_list' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-shopping-cart"></i> View Current Order
+            <a href="{% url 'order_list' %}" class="menu-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span>View Current Order</span>
             </a>
 
-            <a href="{% url 'medicine_history' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-history"></i> View Order History
+            <a href="{% url 'medicine_history' %}" class="menu-btn">
+                <i class="fas fa-history"></i>
+                <span>View Order History</span>
             </a>
 
-            <a href="{% url 'view_announcements' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-bullhorn"></i> View Announcements
+            <a href="{% url 'view_announcements' %}" class="menu-btn">
+                <i class="fas fa-bullhorn"></i>
+                <span>View Announcements</span>
             </a>
 
-            <a href="{% url 'delivery_page' %}" class="btn" style="background-color: #5c74e3; color: #FFFFFF; padding: 14px 10px; font-size: 0.9em; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <i class="fas fa-truck"></i> Track Delivery
+            <a href="{% url 'delivery_page' %}" class="menu-btn">
+                <i class="fas fa-truck"></i>
+                <span>Track Delivery</span>
             </a>
         </div>
 
         <!-- RECENT ANNOUNCEMENT -->
-        <h3 style="color: #36489e; font-size: 1.5em; margin-top: 40px; margin-bottom: 15px; border-bottom: 2px solid #e0e0e0; padding-bottom: 5px;">
-            Recent Announcement
-        </h3>
+        <div class="announcement-section">
+            <h3>Recent Announcement</h3>
 
-        <div style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
             {% if latest_announcement %}
-                <div style="background-color: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 5px solid #36489e; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    <strong style="font-size: 1em; color: #36489e;">{{ latest_announcement.title }}</strong>
-                    <p style="font-size: 0.9em; color: #555; margin-top: 5px;">
-                        {{ latest_announcement.content|truncatewords:25 }}
-                    </p>
-                    <p style="font-size: 0.8em; color: #777;">
+                <div class="announcement-card">
+                    <strong>{{ latest_announcement.title }}</strong>
+                    <p>{{ latest_announcement.content|truncatewords:25 }}</p>
+                    <p class="announcement-date">
+                        <i class="fas fa-calendar-alt"></i>
                         Posted on {{ latest_announcement.date_posted|date:"F j, Y, g:i a" }}
                     </p>
-                    <a href="{% url 'view_announcements' %}" style="font-size: 0.9em; color: #5c74e3; text-decoration: none;">
-                        View All Announcements →
+                    <a href="{% url 'view_announcements' %}" class="announcement-link">
+                        View All Announcements <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
             {% else %}
-                <div style="background-color: #FFFFFF; padding: 15px; border-radius: 8px; border-left: 5px solid #ccc; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    <p style="font-size: 0.9em; color: #555;">No announcements have been posted yet.</p>
+                <div class="announcement-card">
+                    <strong>Welcome to MediServe Free Medicine Program</strong>
+                    <p>All barangay residents can now access free medicines including maintenance drugs, vitamins, and over-the-counter medications. Simply browse our medicine list, add items to your order, and submit your request. Orders are processed within 24-48 hours and delivered directly to your address.</p>
+                    <p class="announcement-date">
+                        <i class="fas fa-info-circle"></i>
+                        For assistance, contact your barangay health center
+                    </p>
+                    <a href="{% url 'view_announcements' %}" class="announcement-link">
+                        View More Information <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             {% endif %}
         </div>
-
     </div>
 </div>
 
 <!-- PROFILE SIDEBAR -->
-<div id="profile-sidebar" style="position: fixed; top: 0; right: 0; height: 100%; width: 0; background-color: #FFFFFF; box-shadow: -4px 0 10px rgba(0,0,0,0.15); z-index: 1000; overflow-x: hidden; transition: 0.3s; padding-left: 0;">
-    <div style="padding: 20px; width: 260px;">
-        <button onclick="toggleProfileSidebar(false)" style="position: absolute; top: 10px; right: 25px; font-size: 30px; border: none; background: none; color: #36489e; cursor: pointer;">&times;</button>
-        <h3 style="color: #36489e; margin-bottom: 30px; padding-top: 20px;">Profile Menu</h3>
+<div id="profile-sidebar" class="profile-sidebar">
+    <div class="sidebar-content">
+        <button onclick="toggleProfileSidebar(false)" class="close-btn">&times;</button>
+        <h3>Profile Menu</h3>
 
-        <div style="text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
-            <i class="fas fa-user-circle" style="font-size: 2.5em; color: #36489e;"></i>
-            <p style="font-size: 1.1em; font-weight: bold; margin: 5px 0 0 0;">
-                {{ user.first_name }} {{ user.last_name }}
-            </p>
-            <small style="color: #555;">@{{ user.username|default:'Guest' }}</small>
+        <div class="profile-header">
+            <i class="fas fa-user-circle"></i>
+            <p>{{ user.first_name }} {{ user.last_name }}</p>
+            <small>@{{ user.username|default:'Guest' }}</small>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <a href="{% url 'profile_view' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
-                <i class="fas fa-user" style="margin-right: 10px;"></i> View/Edit Profile
+        <div class="sidebar-menu">
+            <a href="{% url 'profile_view' %}" class="sidebar-link">
+                <i class="fas fa-user"></i> View/Edit Profile
             </a>
-            <a href="{% url 'profile_view' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
-                <i class="fas fa-file-alt" style="margin-right: 10px;"></i> View Documents
+            <a href="{% url 'profile_view' %}" class="sidebar-link">
+                <i class="fas fa-file-alt"></i> View Documents
             </a>
-            <a href="{% url 'medicine_history' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
-                <i class="fas fa-history" style="margin-right: 10px;"></i> Order History
+            <a href="{% url 'medicine_history' %}" class="sidebar-link">
+                <i class="fas fa-history"></i> Order History
             </a>
-            <a href="{% url 'settings' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
-                <i class="fas fa-cog" style="margin-right: 10px;"></i> Settings
+            <a href="{% url 'settings' %}" class="sidebar-link">
+                <i class="fas fa-cog"></i> Settings
             </a>
-            <a href="{% url 'feedback' %}" style="text-decoration: none; color: #333; padding: 10px; border-radius: 5px; background-color: #f7f9fa;">
-                <i class="fas fa-comment-dots" style="margin-right: 10px;"></i> Feedback
+            <a href="{% url 'feedback' %}" class="sidebar-link">
+                <i class="fas fa-comment-dots"></i> Feedback
             </a>
         </div>
 
-        <a href="{% url 'logout' %}" class="btn" style="width: 100%; margin-top: 40px; background-color: #dc3545; color: #FFFFFF;">
-            <i class="fas fa-sign-out-alt" style="margin-right: 10px;"></i> Logout
+        <a href="{% url 'logout' %}" class="btn-sidebar-logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
         </a>
     </div>
 </div>
@@ -135,10 +477,10 @@
 <script>
     function toggleProfileSidebar(show) {
         const sidebar = document.getElementById('profile-sidebar');
-        const openWidth = '300px';
+        const openWidth = '350px';
         if (show) {
             sidebar.style.width = openWidth;
-            sidebar.style.paddingLeft = '20px';
+            sidebar.style.paddingLeft = '0';
         } else {
             sidebar.style.width = '0';
             sidebar.style.paddingLeft = '0';
@@ -147,7 +489,7 @@
 
     document.addEventListener('click', function(event) {
         const sidebar = document.getElementById('profile-sidebar');
-        const profileButton = document.querySelector('.menu-options button:first-child');
+        const profileButton = document.querySelector('.menu-grid button:first-child');
         if (sidebar.style.width !== '0px' &&
             !sidebar.contains(event.target) &&
             !profileButton.contains(event.target)) {
