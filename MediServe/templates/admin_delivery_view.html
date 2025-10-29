@@ -1,95 +1,317 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Admin Delivery Control{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #E3EBEE 0%, #FFFFFF 100%);
+        min-height: 100vh;
+    }
+    
+    .delivery-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 40px auto;
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(217, 48, 37, 0.12);
+        overflow: hidden;
+    }
+    
+    .delivery-header {
+        padding: 25px 35px;
+        border-bottom: 3px solid #ffc107;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(135deg, #FFFFFF 0%, #E3EBEE 100%);
+    }
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+    
+    .back-btn {
+        padding: 0;
+        margin-right: 15px;
+        background-color: #ffe6e6;
+        color: #d93025;
+        border-radius: 10px;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid #ffe6e6;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .back-btn:hover {
+        background-color: #ffcccc;
+        border-color: #d93025;
+    }
+    
+    .delivery-header h1 {
+        font-size: 1.7em;
+        color: #36489e;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .btn-assign {
+        background-color: #E3EBEE;
+        color: #666;
+        padding: 12px 18px;
+        font-weight: 700;
+        cursor: not-allowed;
+        border-radius: 10px;
+        border: 2px solid #E3EBEE;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: inherit;
+    }
+    
+    .delivery-main {
+        padding: 35px;
+    }
+    
+    .delivery-main > p {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 1.05em;
+    }
+    
+    .order-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .order-card {
+        background: linear-gradient(135deg, #FFFFFF 0%, #fff9e6 100%);
+        padding: 25px;
+        border-radius: 12px;
+        border: 3px solid #ffc107;
+        box-shadow: 0 4px 15px rgba(255, 193, 7, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .order-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 193, 7, 0.25);
+    }
+    
+    .order-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 18px;
+    }
+    
+    .order-details {
+        flex-grow: 1;
+    }
+    
+    .order-details strong {
+        font-size: 1.5em;
+        color: #36489e;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 6px;
+    }
+    
+    .order-details p {
+        font-size: 0.95em;
+        color: #777;
+        margin: 0;
+    }
+    
+    .order-total {
+        font-size: 1.2em;
+        color: #28a745;
+        font-weight: 700;
+    }
+    
+    .status-badge {
+        font-weight: 700;
+        font-size: 1em;
+        padding: 8px 16px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .status-shipped {
+        color: #FFFFFF;
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    }
+    
+    .status-processing {
+        color: #333;
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+    }
+    
+    .action-buttons {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 2px solid #E3EBEE;
+        display: flex;
+        gap: 12px;
+    }
+    
+    .btn-action {
+        flex-grow: 1;
+        padding: 12px 18px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: inherit;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-size: 0.95em;
+    }
+    
+    .btn-ship {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: #FFFFFF;
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    }
+    
+    .btn-ship:hover {
+        background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+    }
+    
+    .btn-complete {
+        background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+        color: #FFFFFF;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-complete:hover {
+        background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 30px;
+        border: 3px dashed #ffc107;
+        border-radius: 15px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #fff9e6 100%);
+    }
+    
+    .empty-state i {
+        font-size: 4.5em;
+        color: #ffc107;
+        opacity: 0.4;
+        display: block;
+        margin-bottom: 20px;
+    }
+    
+    .empty-state .title {
+        color: #36489e;
+        font-size: 1.4em;
+        font-weight: 700;
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .empty-state .subtitle {
+        color: #666;
+        font-size: 1em;
+    }
+    
+    @media (max-width: 768px) {
+        .delivery-main {
+            padding: 25px;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+        }
+        
+        .order-info {
+            flex-direction: column;
+            gap: 15px;
+        }
+    }
+</style>
 
-    <div style="width: 100%; max-width: 900px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+<div class="delivery-container">
+    <!-- HEADER BAR -->
+    <header class="delivery-header">
+        <div class="header-left">
+            <a href="{% url 'admin_menu' %}" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Orders in Processing & Shipping</h1>
+        </div>
 
-        {# HEADER BAR (Admin Red Theme) #}
-        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between;">
+        <button class="btn-assign">
+            <i class="fas fa-plus"></i> Assign New Driver
+        </button>
+    </header>
 
-            <div style="display: flex; align-items: center;">
-                <a href="{% url 'admin_menu' %}" class="btn" style="
-                    padding: 8px 10px;
-                    margin-right: 15px;
-                    background-color: #f7f9fa;
-                    color: #dc3545;
-                    border-radius: 50%;
-                    width: 40px;
-                    height: 40px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    border: 1px solid #ddd;
-                    box-shadow: none;
-                ">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <h1 style="font-size: 1.5em; color: #36489e;">Orders in Processing & Shipping</h1>
-            </div>
+    <!-- MAIN CONTENT AREA -->
+    <main class="delivery-main">
+        <p>Use the controls below to manage order fulfillment and update delivery status for free medicine orders.</p>
 
-            <button class="btn" style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px; font-weight: 500; cursor: not-allowed;">
-                <i class="fas fa-plus"></i> Assign New Driver
-            </button>
-        </header>
-
-        {# MAIN CONTENT AREA #}
-        <main style="padding: 40px;">
-            <p style="color: #555; margin-bottom: 30px;">Use the controls below to manage order fulfillment and update status.</p>
-
-            <div class="order-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 20px;">
-
-                {% for order in orders %}
-                    <div class="order-tracking-card" style="
-                        background-color: #FFFFFF;
-                        padding: 20px;
-                        border-radius: 8px;
-                        border: 1px solid #ffc107; /* Highlight card border for active processing */
-                        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-                    ">
-
-                        {# ORDER INFO #}
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-
-                            <div style="flex-grow: 1;">
-                                <strong style="font-size: 1.4em; color: #36489e;">Order #{{ order.id }}</strong>
-                                <p style="font-size: 0.9em; color: #777; margin: 0;">Customer: {{ order.user.username }}</p>
-                                <strong style="font-size: 1.1em; color: #dc3545;">Total: ₱{{ order.total_price|floatformat:2 }}</strong>
-                            </div>
-
-                            {# STATUS BADGE #}
-                            <span style="font-weight: bold; font-size: 1em; padding: 5px 10px; border-radius: 4px;
-                                color: #FFFFFF;
-                                background-color: {% if order.status == 'Shipped' %}#007bff{% else %}#ffc107{% endif %};
-                            ">
-                                {{ order.status|upper }}
-                            </span>
+        <div class="order-list">
+            {% for order in orders %}
+                <div class="order-card">
+                    <!-- ORDER INFO -->
+                    <div class="order-info">
+                        <div class="order-details">
+                            <strong>Order #{{ order.id }}</strong>
+                            <p>Customer: {{ order.user.username }}</p>
+                            <p style="margin-top: 6px; font-weight: 600; color: #28a745;">Free Medicine Order</p>
                         </div>
 
-                        {# ACTION BUTTONS #}
-                        <form method="post" action="{% url 'delivery_page' %}" style="margin: 0; display: flex; gap: 10px; border-top: 1px solid #eee; padding-top: 15px;">
-                            {% csrf_token %}
-                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <!-- STATUS BADGE -->
+                        <span class="status-badge {% if order.status == 'Shipped' %}status-shipped{% else %}status-processing{% endif %}">
+                            <i class="fas {% if order.status == 'Shipped' %}fa-shipping-fast{% else %}fa-clock{% endif %}"></i>
+                            {{ order.status|upper }}
+                        </span>
+                    </div>
 
-                            <button type="submit" name="action" value="ship" class="btn" style="background-color: #007bff; color: #FFFFFF; padding: 10px 15px; flex-grow: 1;">
+                    <!-- ACTION BUTTONS -->
+                    <form method="post" action="{% url 'delivery_page' %}" style="margin: 0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                        <div class="action-buttons">
+                            <button type="submit" name="action" value="ship" class="btn-action btn-ship">
                                 <i class="fas fa-shipping-fast"></i> Mark Shipped
                             </button>
 
-                            <button type="submit" name="action" value="complete" class="btn" style="background-color: #28a745; color: #FFFFFF; padding: 10px 15px; flex-grow: 1;">
+                            <button type="submit" name="action" value="complete" class="btn-action btn-complete">
                                 <i class="fas fa-check-double"></i> Mark Completed
                             </button>
-                        </form>
-
-                    </div>
-                {% empty %}
-                    <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
-                        No orders currently in the queue for processing or delivery.
-                    </p>
-                {% endfor %}
-            </div>
-        </main>
-    </div>
+                        </div>
+                    </form>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <i class="fas fa-truck"></i>
+                    <span class="title">No Active Deliveries</span>
+                    <span class="subtitle">No orders currently in the queue for processing or delivery.</span>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
 {% endblock %}
