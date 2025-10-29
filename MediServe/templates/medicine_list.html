@@ -4,96 +4,378 @@
 {% block title %}Browse Medicines{% endblock %}
 
 {% block content %}
-<div style="width: 90%; max-width: 1200px; margin: 30px auto; background-color: #FFFFFF; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+<style>
+    .medicine-container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 40px auto;
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(54, 72, 158, 0.12);
+    }
 
+    .medicine-header {
+        padding: 30px 40px;
+        border-bottom: 2px solid #E3EBEE;
+        background: linear-gradient(135deg, #FFFFFF 0%, #f8f9fc 100%);
+        border-radius: 20px 20px 0 0;
+    }
+
+    .header-top {
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+    }
+
+    .btn-back {
+        padding: 10px;
+        margin-right: 15px;
+        background-color: #E3EBEE;
+        color: #36489e;
+        border-radius: 12px;
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        box-shadow: 0 2px 8px rgba(54, 72, 158, 0.1);
+    }
+
+    .btn-back:hover {
+        background-color: #BFB9FA;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(191, 185, 250, 0.3);
+    }
+
+    .medicine-header h1 {
+        font-size: 2em;
+        font-weight: 700;
+        color: #36489e;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+
+    .search-filter-bar {
+        display: flex;
+        gap: 15px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        flex-grow: 1;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 14px 45px 14px 18px;
+        border: 2px solid #E3EBEE;
+        border-radius: 12px;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        background-color: #FFFFFF;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #36489e;
+        box-shadow: 0 0 0 3px rgba(54, 72, 158, 0.1);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #36489e;
+        font-size: 1.1em;
+    }
+
+    .btn-filter {
+        background-color: #FFFFFF;
+        color: #36489e;
+        border: 2px solid #36489e;
+        padding: 14px 28px;
+        border-radius: 12px;
+        font-weight: 600;
+        min-width: 120px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-filter:hover {
+        background-color: #36489e;
+        color: #FFFFFF;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(54, 72, 158, 0.3);
+    }
+
+    .medicine-main {
+        padding: 40px;
+    }
+
+    .medicine-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 25px;
+    }
+
+    .medicine-card {
+        background-color: #FFFFFF;
+        border: 2px solid #E3EBEE;
+        border-radius: 15px;
+        padding: 20px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .medicine-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #36489e 0%, #BFB9FA 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .medicine-card:hover {
+        border-color: #BFB9FA;
+        transform: translateY(-5px);
+        box-shadow: 0 12px 30px rgba(54, 72, 158, 0.15);
+    }
+
+    .medicine-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .card-header {
+        margin-bottom: 15px;
+    }
+
+    .card-info {
+        flex-grow: 1;
+    }
+
+    .medicine-name {
+        font-size: 1.15em;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+        line-height: 1.4;
+    }
+
+    .medicine-category {
+        font-size: 0.85em;
+        color: #777;
+        margin: 0;
+    }
+
+    .card-middle {
+        display: flex;
+        align-items: center;
+        margin: 15px 0;
+    }
+
+    .medicine-icon {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #BFB9FA 0%, #E3EBEE 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+    .medicine-icon i {
+        font-size: 1.2em;
+        color: #36489e;
+    }
+
+    .stock-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .stock-in {
+        background-color: #28a745;
+        color: #FFFFFF;
+    }
+
+    .stock-low {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+    .stock-out {
+        background-color: #d93025;
+        color: #FFFFFF;
+    }
+
+    .btn-add-order {
+        width: 100%;
+        background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
+        color: #FFFFFF;
+        padding: 14px;
+        border-radius: 10px;
+        border: none;
+        font-size: 1em;
+        font-weight: 600;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 12px rgba(54, 72, 158, 0.2);
+    }
+
+    .btn-add-order:hover:not(:disabled) {
+        background: linear-gradient(135deg, #2d3a82 0%, #36489e 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(54, 72, 158, 0.3);
+    }
+
+    .btn-add-order:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #ccc;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #777;
+    }
+
+    .empty-state i {
+        font-size: 4em;
+        color: #E3EBEE;
+        margin-bottom: 20px;
+    }
+
+    .empty-state p {
+        font-size: 1.2em;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .medicine-container {
+            width: 95%;
+            margin: 20px auto;
+        }
+
+        .medicine-header {
+            padding: 20px 25px;
+        }
+
+        .medicine-header h1 {
+            font-size: 1.5em;
+        }
+
+        .search-filter-bar {
+            flex-direction: column;
+        }
+
+        .btn-filter {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .medicine-main {
+            padding: 25px;
+        }
+
+        .medicine-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="medicine-container">
     <!-- Header and Search/Filter Bar -->
-    <header style="padding: 25px 35px; border-bottom: 1px solid #ddd;">
-        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+    <header class="medicine-header">
+        <div class="header-top">
             <!-- Back Button -->
-            <a href="{% url 'main_menu' %}" class="btn" style="
-                padding: 8px 10px;
-                margin-right: 15px;
-                background-color: #e6e9f0;
-                color: #36489e;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid #ddd;
-                box-shadow: none;">
+            <a href="{% url 'main_menu' %}" class="btn-back">
                 <i class="fas fa-arrow-left"></i>
             </a>
 
-            <h1 style="font-size: 1.6em; font-weight: bold; color: #36489e;">Browse Medicine</h1>
+            <h1>Browse Medicine</h1>
         </div>
 
         <!-- Search and Filter Section -->
-        <div style="display: flex; gap: 15px;">
-            <div style="position: relative; flex-grow: 1;">
-                <input type="text" id="search-input" onkeyup="filterMedicines(this.value)" placeholder="Search medicines..."
-                       style="width: 100%; padding: 12px 40px 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1em; box-shadow: 0 1px 2px rgba(0,0,0,0.05);" />
-                <i class="fas fa-search" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+        <div class="search-filter-bar">
+            <div class="search-wrapper">
+                <input type="text" id="search-input" onkeyup="filterMedicines(this.value)" placeholder="Search medicines..." class="search-input" />
+                <i class="fas fa-search search-icon"></i>
             </div>
 
-            <button class="btn" style="background-color: #FFFFFF; color: #36489e; border: 1px solid #36489e; padding: 12px 25px; border-radius: 8px; font-weight: normal; min-width: 120px;">
+            <button class="btn-filter">
                 <i class="fas fa-filter"></i> Filter
             </button>
         </div>
     </header>
 
     <!-- Product Grid -->
-    <main style="padding: 35px;">
-        <div id="medicine-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+    <main class="medicine-main">
+        <div id="medicine-grid" class="medicine-grid">
             {% for medicine in medicines %}
-                <div class="medicine-card" data-name="{{ medicine.name|lower }}"
-                     style="background-color: #FFFFFF; border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer;">
-
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                        <div style="flex-grow: 1;">
-                            <h3 style="font-size: 1.1em; font-weight: 600; color: #333; margin-bottom: 3px;">
+                <div class="medicine-card" data-name="{{ medicine.name|lower }}">
+                    <div class="card-header">
+                        <div class="card-info">
+                            <h3 class="medicine-name">
                                 {{ medicine.name }}
                                 {% if medicine.brand %} ({{ medicine.brand }}){% endif %}
                                 {% if medicine.dosage %} - {{ medicine.dosage }}{% endif %}
                             </h3>
 
                             {% if medicine.category %}
-                                <p style="font-size: 0.85em; color: #777; margin: 0;">{{ medicine.category }}</p>
+                                <p class="medicine-category">{{ medicine.category }}</p>
                             {% endif %}
                         </div>
-
-                        <span style="font-size: 1.2em; font-weight: bold; color: #36489e; flex-shrink: 0;">₱{{ medicine.price|floatformat:2 }}</span>
                     </div>
 
-                    <div style="display: flex; align-items: center; margin: 10px 0;">
+                    <div class="card-middle">
                         <!-- Icon -->
-                        <div style="height: 30px; width: 30px; border-radius: 50%; background-color: #36489e1a; display: flex; justify-content: center; align-items: center; margin-right: 15px;">
-                            <i class="fas fa-prescription-bottle" style="font-size: 1.1em; color: #36489e;"></i>
+                        <div class="medicine-icon">
+                            <i class="fas fa-prescription-bottle"></i>
                         </div>
 
                         <!-- Stock Status Badge -->
                         {% with stock=medicine.stock_quantity %}
-                            <span style="padding: 4px 10px; border-radius: 4px; font-size: 0.8em; font-weight: bold;
-                                background-color: {% if stock > 10 %}#28a745{% elif stock > 0 %}#ffc107{% else %}#dc3545{% endif %};
-                                color: {% if stock > 10 %}#FFFFFF{% elif stock > 0 %}#333{% else %}#FFFFFF{% endif %};">
+                            <span class="stock-badge {% if stock > 10 %}stock-in{% elif stock > 0 %}stock-low{% else %}stock-out{% endif %}">
                                 {% if stock > 10 %}In Stock{% elif stock > 0 %}Low Stock{% else %}Out of Stock{% endif %}
                             </span>
                         {% endwith %}
                     </div>
 
                     <a href="{% url 'medicine_info' medicine_id=medicine.id %}" style="text-decoration: none;">
-                        <button type="button"
-                                {% if medicine.stock_quantity == 0 %}disabled{% endif %}
-                                style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 12px; border-radius: 8px; border: none; font-size: 1em; margin-top: 10px; cursor: pointer; opacity: {% if medicine.stock_quantity == 0 %}0.5{% else %}1{% endif %};">
+                        <button type="button" class="btn-add-order" {% if medicine.stock_quantity == 0 %}disabled{% endif %}>
                             <i class="fas fa-cart-plus"></i> Add to Order
                         </button>
                     </a>
                 </div>
             {% empty %}
-                <p style="text-align: center; padding: 40px; width: 100%; color: #777; font-size: 1.2em;">
-                    The catalog is currently empty. No medicines are available.
-                </p>
+                <div class="empty-state">
+                    <i class="fas fa-pills"></i>
+                    <p>The catalog is currently empty. No medicines are available.</p>
+                </div>
             {% endfor %}
         </div>
     </main>
