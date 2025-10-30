@@ -16,7 +16,7 @@
             {% for message in messages %}
                 <li style="padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;
                     {% if 'error' in message.tags %}
-                        background-color: #ffe6e6; color: #dc3545; border: 1px solid #dc3545;
+                        background-color: #ffe6e6; color: #d93025; border: 1px solid #d93025;
                     {% elif 'success' in message.tags %}
                         background-color: #e6ffed; color: #28a745; border: 1px solid #28a745;
                     {% else %}
@@ -64,15 +64,24 @@
                 </div>
             </div>
 
-            <!-- DOB and Gender -->
+            <!-- Date of Birth and Gender -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
-                <input type="date" name="date_of_birth" title="Date of Birth" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
-                <select name="sex" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select>
+                <!-- Date of Birth -->
+                <div style="display:flex; flex-direction:column;">
+                    <label for="date_of_birth" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Date of Birth</label>
+                    <input id="date_of_birth" type="date" name="date_of_birth" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
+                </div>
+
+                <!-- Gender -->
+                <div style="display:flex; flex-direction:column;">
+                    <label for="sex" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Gender</label>
+                    <select id="sex" name="sex" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
             </div>
 
             <!-- Submit Button -->
