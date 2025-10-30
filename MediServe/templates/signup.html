@@ -12,21 +12,21 @@
 
         <!-- Display Django Messages -->  
         {% if messages %} 
-    <ul style="list-style: none; padding: 0; width: 100%; max-width: 500px; margin-bottom: 20px;">
-        {% for message in messages %}
-            <li style="padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;
-                {% if 'error' in message.tags %}
-                    background-color: #ffe6e6; color: #dc3545; border: 1px solid #dc3545;
-                {% elif 'success' in message.tags %}
-                    background-color: #e6ffed; color: #28a745; border: 1px solid #28a745;
-                {% else %}
-                    background-color: #f7f9fa; color: #333; border: 1px solid #ddd;
-                {% endif %}">
-                {{ message }} 
-            </li>
-        {% endfor %}
-    </ul>
-{% endif %}
+        <ul style="list-style: none; padding: 0; width: 100%; max-width: 500px; margin-bottom: 20px;">
+            {% for message in messages %}
+                <li style="padding: 10px; border-radius: 5px; font-weight: bold; font-size: 0.9em;
+                    {% if 'error' in message.tags %}
+                        background-color: #ffe6e6; color: #dc3545; border: 1px solid #dc3545;
+                    {% elif 'success' in message.tags %}
+                        background-color: #e6ffed; color: #28a745; border: 1px solid #28a745;
+                    {% else %}
+                        background-color: #f7f9fa; color: #333; border: 1px solid #ddd;
+                    {% endif %}">
+                    {{ message }} 
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
 
         <!-- Registration Form -->
         <form method="post" enctype="multipart/form-data" style="width: 100%; max-width: 650px;">
@@ -45,13 +45,18 @@
 
             <!-- Full Name -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 0.5fr; gap: 15px; margin-bottom: 15px;">
-                <!-- 3.1 First Name Input change: added label, id and subtle styling -->
+                <!-- First Name -->
                 <div style="display:flex; flex-direction:column;">
                     <label for="first_name" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">First Name</label>
                     <input id="first_name" type="text" name="first_name" placeholder="First Name" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
                 </div>
 
-                <input type="text" name="last_name" placeholder="Last Name" required>
+                <!-- 3.2 Last Name Input -->
+                <div style="display:flex; flex-direction:column;">
+                    <label for="last_name" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Last Name</label>
+                    <input id="last_name" type="text" name="last_name" placeholder="Last Name" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
+                </div>
+
                 <input type="text" name="middle_initial" placeholder="M.I." maxlength="1">
             </div>
 
