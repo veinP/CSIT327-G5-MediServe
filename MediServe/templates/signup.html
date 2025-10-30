@@ -85,7 +85,8 @@
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" class="btn" style="background-color: #36489e; color:#fff; padding: 15px 0; width: 100%; border-radius:6px; border:none;">
+            <button type="submit" class="btn" 
+                    style="background-color: #36489e; color:#fff; padding: 15px 0; width: 100%; border-radius:6px; border:none; transition: background-color 0.3s, color 0.3s;">
                 <i class="fas fa-check"></i> Complete Registration
             </button>
         </form>
@@ -95,9 +96,22 @@
     <div style="flex: 0.3; background-color: #36489e; color: #FFFFFF; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
         <h2 style="color: #FFFFFF; margin-bottom: 15px;">Member Access</h2>
         <p style="color: #E3EBEE; margin-bottom: 30px;">Already have an account? Log in now.</p>
-        <a href="{% url 'login' %}" class="btn-secondary" style="background-color: #BFB9FA; color: #36489e; padding: 12px 25px; border-radius:6px; text-decoration:none;">
+        <a href="{% url 'login' %}" class="btn-secondary" style="background-color: #BFB9FA; color: #36489e; padding: 12px 25px; border-radius:6px; text-decoration:none; transition: background-color 0.3s;">
             <i class="fas fa-sign-in-alt"></i> Log In
         </a>
     </div>
 </div>
+
+<!-- Inline CSS for hover effects -->
+<style>
+    .btn:hover {
+        background-color: #E3EBEE; /* Light Gray hover */
+        color: #36489e; /* Text changes to primary blue */
+    }
+
+    .btn-secondary:hover {
+        background-color: #36489e; /* Primary blue hover */
+        color: #fff;
+    }
+</style>
 {% endblock %}
