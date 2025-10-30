@@ -45,19 +45,16 @@
 
             <!-- Full Name -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 0.5fr; gap: 15px; margin-bottom: 15px;">
-                <!-- First Name -->
                 <div style="display:flex; flex-direction:column;">
                     <label for="first_name" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">First Name</label>
                     <input id="first_name" type="text" name="first_name" placeholder="First Name" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
                 </div>
 
-                <!-- Last Name -->
                 <div style="display:flex; flex-direction:column;">
                     <label for="last_name" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Last Name</label>
                     <input id="last_name" type="text" name="last_name" placeholder="Last Name" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
                 </div>
 
-                <!-- Middle Initial -->
                 <div style="display:flex; flex-direction:column;">
                     <label for="middle_initial" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">M.I.</label>
                     <input id="middle_initial" type="text" name="middle_initial" placeholder="M.I." maxlength="1" style="padding:10px; border-radius:6px; border:1px solid #ccc;">
@@ -65,14 +62,12 @@
             </div>
 
             <!-- Date of Birth and Gender -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px;">
-                <!-- Date of Birth -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                 <div style="display:flex; flex-direction:column;">
                     <label for="date_of_birth" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Date of Birth</label>
                     <input id="date_of_birth" type="date" name="date_of_birth" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
                 </div>
 
-                <!-- Gender -->
                 <div style="display:flex; flex-direction:column;">
                     <label for="sex" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333;">Gender</label>
                     <select id="sex" name="sex" required style="padding:10px; border-radius:6px; border:1px solid #ccc;">
@@ -82,6 +77,12 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
+            </div>
+
+            <!-- 3.7 Upload Senior Citizen ID Input -->
+            <div style="margin-bottom: 30px;">
+                <label for="senior_id" style="font-size:0.85rem; text-align:left; margin-bottom:6px; color:#333; display:block;">Upload Senior Citizen ID (if applicable)</label>
+                <input id="senior_id" type="file" name="senior_id" accept=".jpg,.jpeg,.png,.pdf" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc;">
             </div>
 
             <!-- Submit Button -->
@@ -105,14 +106,23 @@
 
 <!-- Inline CSS for hover effects -->
 <style>
+    /* Submit button hover */
     .btn:hover {
-        background-color: #E3EBEE; /* Light Gray hover */
-        color: #36489e; /* Text changes to primary blue */
+        background-color: #E3EBEE;
+        color: #36489e;
     }
 
+    /* Login button hover */
     .btn-secondary:hover {
-        background-color: #36489e; /* Primary blue hover */
+        background-color: #36489e;
         color: #fff;
+    }
+
+    /* Input focus effects */
+    input:focus, select:focus {
+        outline: none;
+        border: 2px solid #36489e; /* Primary blue */
+        box-shadow: 0 0 5px rgba(54, 72, 158, 0.5);
     }
 </style>
 {% endblock %}
