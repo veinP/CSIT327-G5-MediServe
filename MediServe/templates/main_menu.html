@@ -131,6 +131,7 @@
         font-size: 1.8em;
     }
 
+    /* Announcement Section */
     .announcement-section h3 {
         color: #36489e;
         font-size: 1.6em;
@@ -194,19 +195,7 @@
         gap: 10px;
     }
 
-    .no-announcement {
-        background-color: #E3EBEE;
-        padding: 20px;
-        border-radius: 12px;
-        border-left: 5px solid #BFB9FA;
-    }
-
-    .no-announcement p {
-        font-size: 0.95em;
-        color: #666;
-        margin: 0;
-    }
-
+    /* Profile Sidebar */
     .profile-sidebar {
         position: fixed;
         top: 0;
@@ -372,14 +361,8 @@
             <p>What would you like to do today?</p>
         </div>
 
-        <!-- ACTION BUTTON GRID -->
+        <!-- ACTION BUTTON GRID (EXCLUDING 6.1 & 6.2) -->
         <div class="menu-grid">
-            <!-- 6.1 Return to Home Button -->
-            <a href="{% url 'main_menu' %}" class="menu-btn">
-                <i class="fas fa-home"></i>
-                <span>Return to Home</span>
-            </a>
-
             <button onclick="toggleProfileSidebar(true)" class="menu-btn">
                 <i class="fas fa-user-circle"></i>
                 <span>View Profile</span>
@@ -436,7 +419,7 @@
     </div>
 </div>
 
-<!-- PROFILE SIDEBAR -->
+<!-- PROFILE SIDEBAR WITH 6.1 & 6.2 -->
 <div id="profile-sidebar" class="profile-sidebar">
     <div class="sidebar-content">
         <button onclick="toggleProfileSidebar(false)" class="close-btn">&times;</button>
@@ -449,11 +432,16 @@
         </div>
 
         <div class="sidebar-menu">
-            <a href="{% url 'profile_view' %}" class="sidebar-link">
-                <i class="fas fa-user"></i> View/Edit Profile
+            <!-- 6.1 Return to Home -->
+            <a href="{% url 'main_menu' %}" class="sidebar-link">
+                <i class="fas fa-home"></i> Return to Home
             </a>
+            <!-- 6.2 View Documents -->
             <a href="{% url 'profile_view' %}" class="sidebar-link">
                 <i class="fas fa-file-alt"></i> View Documents
+            </a>
+            <a href="{% url 'profile_view' %}" class="sidebar-link">
+                <i class="fas fa-user"></i> View/Edit Profile
             </a>
             <a href="{% url 'medicine_history' %}" class="sidebar-link">
                 <i class="fas fa-history"></i> Order History
