@@ -361,7 +361,7 @@
             <p>What would you like to do today?</p>
         </div>
 
-        <!-- ACTION BUTTON GRID (EXCLUDING 6.1 & 6.2) -->
+        <!-- ACTION BUTTON GRID (NO 6.1-6.3) -->
         <div class="menu-grid">
             <button onclick="toggleProfileSidebar(true)" class="menu-btn">
                 <i class="fas fa-user-circle"></i>
@@ -375,10 +375,6 @@
                 <i class="fas fa-shopping-cart"></i>
                 <span>View Current Order</span>
             </a>
-            <a href="{% url 'medicine_history' %}" class="menu-btn">
-                <i class="fas fa-history"></i>
-                <span>View Order History</span>
-            </a>
             <a href="{% url 'view_announcements' %}" class="menu-btn">
                 <i class="fas fa-bullhorn"></i>
                 <span>View Announcements</span>
@@ -389,7 +385,7 @@
             </a>
         </div>
 
-        <!-- RECENT ANNOUNCEMENT -->
+        <!-- ANNOUNCEMENTS -->
         <div class="announcement-section">
             <h3>Recent Announcement</h3>
             {% if latest_announcement %}
@@ -419,7 +415,7 @@
     </div>
 </div>
 
-<!-- PROFILE SIDEBAR WITH 6.1 & 6.2 -->
+<!-- PROFILE SIDEBAR WITH 6.1, 6.2, 6.3 -->
 <div id="profile-sidebar" class="profile-sidebar">
     <div class="sidebar-content">
         <button onclick="toggleProfileSidebar(false)" class="close-btn">&times;</button>
@@ -440,11 +436,12 @@
             <a href="{% url 'profile_view' %}" class="sidebar-link">
                 <i class="fas fa-file-alt"></i> View Documents
             </a>
-            <a href="{% url 'profile_view' %}" class="sidebar-link">
-                <i class="fas fa-user"></i> View/Edit Profile
-            </a>
+            <!-- 6.3 Order History -->
             <a href="{% url 'medicine_history' %}" class="sidebar-link">
                 <i class="fas fa-history"></i> Order History
+            </a>
+            <a href="{% url 'profile_view' %}" class="sidebar-link">
+                <i class="fas fa-user"></i> View/Edit Profile
             </a>
             <a href="{% url 'settings' %}" class="sidebar-link">
                 <i class="fas fa-cog"></i> Settings
