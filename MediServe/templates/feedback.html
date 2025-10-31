@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
@@ -6,49 +5,60 @@
 
 {% block content %}
 
-    <div style="width: 100%; max-width: 650px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+<div style="width: 100%; max-width: 650px; margin: 50px auto; background-color: #FFFFFF; border-radius: 15px; box-shadow: 0 8px 24px rgba(0,0,0,0.08); overflow: hidden; font-family: Arial, sans-serif;">
 
-        {# HEADER BAR #}
-        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center; justify-content: flex-start;">
+    {# HEADER #}
+    <header style="padding: 20px 30px; background-color: #36489e; color: #FFFFFF; display: flex; align-items: center; gap: 15px;">
+    <a href="{% url 'profile_view' %}" style="
+        width: 45px; height: 45px; background-color: #FFFFFF; color: #36489e;
+        display: flex; justify-content: center; align-items: center;
+        border-radius: 50%; text-decoration: none; font-weight: bold;
+        transition: transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.1)';" onmouseout="this.style.transform='scale(1)';">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <h1 style="font-size: 1.8em; font-weight: 700; margin: 0; color: #FFFFFF;">Feedback</h1>
+</header>
 
-            <a href="{% url 'profile_view' %}" class="btn" style="
-                padding: 8px 10px;
-                margin-right: 15px;
-                background-color: #f7f9fa;
-                color: #36489e;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
+
+    {# MAIN FORM CONTENT #}
+    <main style="padding: 35px 30px; display: flex; flex-direction: column; gap: 25px;">
+
+        <p style="color: #555; font-size: 0.95em;">
+            Use this Feedback form to report bugs, suggest features, or share your overall experience with MediServe.
+        </p>
+
+        <form method="post" action="{% url 'feedback' %}" style="width: 100%; display: flex; flex-direction: column; gap: 20px;">
+            {% csrf_token %}
+
+            <label for="subject" style="font-weight: 600; color: #36489e;">Feedback Subject:</label>
+            <input type="text" id="subject" name="subject" placeholder="e.g., App Bug, Feature Request" required
+                style="width: 100%; padding: 12px; border: 1px solid #E3EBEE; border-radius: 10px; font-size: 0.95em;">
+
+            <label for="details" style="font-weight: 600; color: #36489e;">Feedback Details:</label>
+            <textarea id="details" name="details" rows="8" placeholder="Please describe your feedback in detail..." required
+                style="width: 100%; padding: 12px; border: 1px solid #E3EBEE; border-radius: 10px; font-size: 0.95em; resize: vertical;"></textarea>
+
+            {# SUBMIT BUTTON #}
+            <button type="submit" style="
+                width: 100%;
+                background-color: #36489e;
+                color: #FFFFFF;
+                padding: 15px 0;
+                font-size: 1.1em;
+                font-weight: 600;
+                border-radius: 10px;
+                border: none;
+                display: inline-flex;
                 justify-content: center;
                 align-items: center;
-                border: 1px solid #ddd;
-                box-shadow: none;
-            ">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1 style="font-size: 1.5em; color: #36489e;">Submit Feedback</h1>
-        </header>
+                gap: 8px;
+                transition: background 0.3s, transform 0.2s;
+            " onmouseover="this.style.backgroundColor='#2a367c'; this.style.transform='scale(1.02)';" onmouseout="this.style.backgroundColor='#36489e'; this.style.transform='scale(1)';">
+                <i class="fas fa-paper-plane"></i> Submit Feedback
+            </button>
+        </form>
+    </main>
+</div>
 
-        {# MAIN FORM CONTENT #}
-        <main style="padding: 40px; text-align: left;">
-            <p style="color: #555; margin-bottom: 30px;">
-                Use this form to report bugs, suggest features, or share your overall experience with MediServe.
-            </p>
-
-            <form method="post" action="{% url 'feedback' %}" style="width: 100%;">
-                {% csrf_token %}
-
-                <label for="subject" style="font-weight: bold; margin-bottom: 5px; display: block; color: #36489e;">Subject:</label>
-                <input type="text" id="subject" name="subject" placeholder="e.g., App Bug, Feature Request" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 15px;">
-
-                <label for="details" style="font-weight: bold; margin-bottom: 5px; display: block; color: #36489e;">Details:</label>
-                <textarea id="details" name="details" rows="8" placeholder="Please describe your feedback in detail..." required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; resize: vertical; margin-bottom: 30px;"></textarea>
-
-                <button type="submit" class="btn" style="width: 100%; background-color: #5c74e3; color: #FFFFFF; padding: 15px; font-size: 1.1em;">
-                    <i class="fas fa-paper-plane"></i> Submit Feedback
-                </button>
-            </form>
-        </main>
-    </div>
 {% endblock %}
