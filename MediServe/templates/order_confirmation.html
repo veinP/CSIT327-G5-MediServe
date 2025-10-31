@@ -1,94 +1,199 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Confirm Order{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #E3EBEE 0%, #FFFFFF 100%);
+        min-height: 100vh;
+    }
 
-    <div style="width: 100%; max-width: 800px; margin: 40px auto; background-color: #FFFFFF; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    .confirmation-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 40px auto;
+        background-color: #FFFFFF;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
 
-        {# HEADER BAR #}
-        <header style="padding: 15px 30px; border-bottom: 1px solid #ddd; display: flex; align-items: center;">
-            <a href="{% url 'order_list' %}" class="btn" style="
-                padding: 8px 10px;
-                margin-right: 15px;
-                background-color: #f7f9fa;
-                color: #36489e;
-                border-radius: 50%;
-                width: 40px;
-                height: 40px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                border: 1px solid #ddd;
-                box-shadow: none;
-            ">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <h1 style="font-size: 1.5em; color: #36489e;">Final Order Review</h1>
-        </header>
+    .confirmation-header {
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+        border-bottom: 2px solid #ddd;
+        gap: 15px;
+    }
 
-        {# MAIN REVIEW CONTENT #}
-        <main style="padding: 30px;">
-            <p style="color: #555; margin-bottom: 25px;">Please confirm the details of your order before submitting.</p>
+    .back-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #f7f9fa;
+        color: #36489e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2em;
+        border: 1px solid #ddd;
+        transition: all 0.2s;
+        text-decoration: none;
+    }
 
-            <div class="review-items" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+    .back-btn:hover {
+        background-color: #e3ebee;
+    }
 
-                {% for item in items %}
-                    <div class="order-item" style="
-                        background-color: #f7f9fa;
-                        padding: 15px;
-                        border-radius: 8px;
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        border: 1px solid #e0e0e0;
-                    ">
+    .confirmation-header h1 {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #36489e;
+        margin: 0;
+    }
 
-                        <div style="flex-grow: 1;">
-                            <div style="display: flex; align-items: center;">
-                                <i class="fas fa-capsules" style="color: #36489e; margin-right: 10px;"></i>
-                                <strong style="font-size: 1.1em; color: #333;">{{ item.quantity }}x {{ item.medicine.name }}</strong>
-                            </div>
+    .confirmation-main {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 
-                            <p style="font-size: 0.9em; color: #555; margin: 5px 0 0 25px;">
-                                Subtotal: ₱{{ item.get_total_price|floatformat:2 }}
-                            </p>
+    .review-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
 
-                            {% if item.special_request %}
-                                <p style="font-size: 0.9em; color: #5c74e3; margin: 5px 0 0 25px;">
-                                    Note: {{ item.special_request }}
-                                </p>
-                            {% endif %}
+    .order-item {
+        background-color: #f7f9fa;
+        padding: 15px 20px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border: 1px solid #e0e0e0;
+        gap: 15px;
+    }
+
+    .order-item i {
+        color: #36489e;
+        margin-right: 10px;
+    }
+
+    .order-item strong {
+        font-size: 1.1em;
+        color: #333;
+    }
+
+    .order-item p {
+        font-size: 0.9em;
+        color: #555;
+        margin: 5px 0 0 25px;
+    }
+
+    .order-item .note {
+        color: #5c74e3;
+    }
+
+    .total-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px solid #ddd;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-row strong {
+        font-size: 1.5em;
+    }
+
+    .total-row .amount {
+        color: #dc3545;
+    }
+
+    .confirm-btn {
+        width: 100%;
+        background-color: #28a745;
+        color: #FFFFFF;
+        font-size: 1.1em;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .confirm-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+
+    .confirmation-main p.notice {
+        font-size: 0.9em;
+        color: #777;
+        margin: 0;
+    }
+</style>
+
+<div class="confirmation-container">
+    <header class="confirmation-header">
+        <a href="{% url 'order_list' %}" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1>Final Order Review</h1>
+    </header>
+
+    <main class="confirmation-main">
+        <p>Please confirm the details of your order before submitting.</p>
+
+        <div class="review-items">
+            {% for item in items %}
+                <div class="order-item">
+                    <div>
+                        <div style="display:flex; align-items:center;">
+                            <i class="fas fa-capsules"></i>
+                            <strong>{{ item.quantity }}x {{ item.medicine.name }}</strong>
                         </div>
-
-                        <strong style="font-size: 1.1em; color: #36489e;">
-                            ₱{{ item.get_total_price|floatformat:2 }}
-                        </strong>
+                        <p>Subtotal: ₱{{ item.get_total_price|floatformat:2 }}</p>
+                        {% if item.special_request %}
+                            <p class="note">Note: {{ item.special_request }}</p>
+                        {% endif %}
                     </div>
-                {% endfor %}
-            </div>
-
-            {# FINAL TOTAL AND CONFIRMATION SECTION #}
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #ddd;">
-
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <strong style="font-size: 1.5em;">Total Amount Due</strong>
-                    <strong style="font-size: 1.5em; color: #dc3545;">₱{{ order.total_price|floatformat:2 }}</strong>
+                    <strong>₱{{ item.get_total_price|floatformat:2 }}</strong>
                 </div>
+            {% endfor %}
+        </div>
 
-                <p style="font-size: 0.9em; color: #777; margin-bottom: 20px;">
-                    *By clicking confirm, stock will be deducted and your order will be placed into the processing queue.*
-                </p>
-
-                <form action="{% url 'process_order' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn" style="width: 100%; background-color: #28a745; color: #FFFFFF; font-size: 1.1em; padding: 15px;">
-                        <i class="fas fa-clipboard-check"></i> Confirm & Submit Order
-                    </button>
-                </form>
+        <div class="total-section">
+            <div class="total-row">
+                <strong>Total Amount Due</strong>
+                <strong class="amount">₱{{ order.total_price|floatformat:2 }}</strong>
             </div>
-        </main>
-    </div>
+            <p class="notice">
+                *By clicking confirm, stock will be deducted and your order will be placed into the processing queue.*
+            </p>
+            <form action="{% url 'process_order' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="confirm-btn">
+                    <i class="fas fa-clipboard-check"></i> Confirm & Submit Order
+                </button>
+            </form>
+        </div>
+    </main>
+</div>
 {% endblock %}
