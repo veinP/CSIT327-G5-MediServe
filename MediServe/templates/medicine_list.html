@@ -226,7 +226,7 @@
         color: #FFFFFF;
     }
 
-    .btn-add-order {
+    .btn-view-medicine {
         width: 100%;
         background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
         color: #FFFFFF;
@@ -243,15 +243,16 @@
         justify-content: center;
         gap: 8px;
         box-shadow: 0 4px 12px rgba(54, 72, 158, 0.2);
+        text-decoration: none;
     }
 
-    .btn-add-order:hover:not(:disabled) {
+    .btn-view-medicine:hover:not(:disabled) {
         background: linear-gradient(135deg, #2d3a82 0%, #36489e 100%);
         transform: translateY(-2px);
         box-shadow: 0 6px 16px rgba(54, 72, 158, 0.3);
     }
 
-    .btn-add-order:disabled {
+    .btn-view-medicine:disabled {
         opacity: 0.5;
         cursor: not-allowed;
         background: #ccc;
@@ -365,10 +366,8 @@
                         {% endwith %}
                     </div>
 
-                    <a href="{% url 'medicine_info' medicine_id=medicine.id %}" style="text-decoration: none;">
-                        <button type="button" class="btn-add-order" {% if medicine.stock_quantity == 0 %}disabled{% endif %}>
-                            <i class="fas fa-cart-plus"></i> Add to Order
-                        </button>
+                    <a href="{% url 'medicine_info' medicine_id=medicine.id %}" class="btn-view-medicine" {% if medicine.stock_quantity == 0 %}style="pointer-events: none;"{% endif %}>
+                        <i class="fas fa-info-circle"></i> View Medicine
                     </a>
                 </div>
             {% empty %}
