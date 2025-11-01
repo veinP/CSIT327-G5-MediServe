@@ -5,6 +5,7 @@ from django.utils import timezone
 from apps.medicine.models import Medicine
 from .models import Order, OrderItem
 
+
 # 🟢 Add medicine to order
 @login_required
 def add_to_order(request, medicine_id):
@@ -19,10 +20,10 @@ def add_to_order(request, medicine_id):
             messages.warning(request, f"⚠️ Only {medicine.stock_quantity} available in stock.")
             return redirect("medicine_info", medicine_id=medicine.id)
 
-        # Create or get a pending order
+        # Create or get a pending order (Cart status)
         order, created = Order.objects.get_or_create(
             user=request.user,
-            status="Pending",
+            status="Cart",  # Changed from "Pending" to "Cart"
             defaults={"created_at": timezone.now()}
         )
 
@@ -49,7 +50,8 @@ def add_to_order(request, medicine_id):
 @login_required
 def order_list(request):
     try:
-        order = Order.objects.get(user=request.user, status="Pending")
+        # Only show orders in "Cart" status (not yet submitted)
+        order = Order.objects.get(user=request.user, status="Cart")
         items = order.items.all()
     except Order.DoesNotExist:
         items = []
@@ -58,7 +60,7 @@ def order_list(request):
     return render(request, "order_list.html", context)
 
 
-# 🟢 Admin: Manage delivery (reduces stock on “ship”)
+# 🟢 Admin: Manage delivery (reduces stock on "ship")
 @login_required
 def delivery_page(request):
     if request.method == "POST":
@@ -95,8 +97,8 @@ def delivery_page(request):
 
         return redirect("delivery_page")
 
-    # Show active orders
-    orders = Order.objects.exclude(status="Completed").order_by("-created_at")
+    # Show active orders (exclude Cart and Completed)
+    orders = Order.objects.exclude(status__in=["Cart", "Completed"]).order_by("-created_at")
     return render(request, "delivery_page.html", {"orders": orders})
 
 
@@ -109,7 +111,45 @@ def remove_order_item(request, item_id):
     return redirect("order_list")
 
 
-# 🟢 Simple checkout confirmation
+# 🟢 Simple checkout confirmation - FIXED
 @login_required
 def order_checkout(request):
-    return render(request, "order_checkout.html")
+    try:
+        # Get the cart (order with "Cart" status)
+        order = Order.objects.get(user=request.user, status="Cart")
+
+        # Change status from "Cart" to "Pending" (submitted to admin)
+        order.status = "Pending"
+        order.save()
+
+        messages.success(request, "✅ Your order has been placed successfully!")
+    except Order.DoesNotExist:
+        messages.warning(request, "⚠️ No items in your cart.")
+
+    return redirect("order_list")
+
+
+@login_required
+def track_delivery(request):
+    """Show all user's orders (excluding Cart status) for tracking delivery."""
+    # Get all orders except those still in cart
+    orders = Order.objects.filter(
+        user=request.user
+    ).exclude(
+        status="Cart"
+    ).order_by('-created_at')
+
+    context = {"orders": orders}
+    return render(request, "track_delivery.html", context)
+
+
+@login_required
+def order_history(request):
+    """Show all user's completed orders."""
+    orders = Order.objects.filter(
+        user=request.user,
+        status="Completed"
+    ).order_by('-created_at')
+
+    context = {"orders": orders}
+    return render(request, "order_history.html", context)
