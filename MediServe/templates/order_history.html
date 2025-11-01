@@ -1,0 +1,463 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order History{% endblock %}
+
+{% block content %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf5 100%);
+        min-height: 100vh;
+        padding-bottom: 30px;
+    }
+
+    .history-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 30px auto;
+        background-color: #FFFFFF;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(54, 72, 158, 0.12);
+        overflow: hidden;
+        max-height: calc(100vh - 60px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Header */
+    .history-header {
+        padding: 25px 35px;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    .history-header::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        top: -150px;
+        right: -100px;
+    }
+
+    .btn-back {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #FFFFFF;
+        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .btn-back:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: translateX(-3px);
+    }
+
+    .history-title {
+        font-size: 1.5em;
+        color: #FFFFFF;
+        font-weight: 600;
+        z-index: 1;
+    }
+
+    /* Main Content */
+    .history-main {
+        padding: 35px 40px 40px;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    /* Custom scrollbar */
+    .history-main::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .history-main::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .history-main::-webkit-scrollbar-thumb {
+        background: #10b981;
+        border-radius: 10px;
+    }
+
+    .history-main::-webkit-scrollbar-thumb:hover {
+        background: #059669;
+    }
+
+    .orders-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    /* Order Card */
+    .order-card {
+        background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+        padding: 25px;
+        border-radius: 16px;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .order-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+    }
+
+    .order-card:hover {
+        border-color: #10b981;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12);
+        transform: translateY(-2px);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #e5e7eb;
+    }
+
+    .order-id {
+        font-size: 1.15em;
+        font-weight: 700;
+        color: #1a202c;
+    }
+
+    .order-date {
+        font-size: 0.85em;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .completed-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 0.85em;
+        font-weight: 600;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        color: #065f46;
+        border: 1px solid #6ee7b7;
+    }
+
+    /* Completed Timeline */
+    .completed-timeline {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 25px 0;
+        padding: 0 20px;
+        position: relative;
+    }
+
+    .completed-timeline::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        height: 3px;
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        z-index: 0;
+    }
+
+    .status-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        z-index: 1;
+        position: relative;
+    }
+
+    .status-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1em;
+        border: 3px solid #ffffff;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .status-label {
+        font-size: 0.75em;
+        color: #1a202c;
+        font-weight: 600;
+        text-align: center;
+        max-width: 80px;
+    }
+
+    /* Order Items */
+    .order-items {
+        margin-top: 20px;
+    }
+
+    .items-header {
+        font-size: 0.95em;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        background-color: #f9fafb;
+        border-radius: 10px;
+        margin-bottom: 8px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #1a202c;
+        font-size: 0.95em;
+    }
+
+    .item-quantity {
+        font-size: 0.9em;
+        color: #6b7280;
+    }
+
+    /* Completion Info */
+    .completion-info {
+        margin-top: 15px;
+        padding: 12px 15px;
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border-radius: 10px;
+        border: 1px solid #6ee7b7;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .completion-info i {
+        color: #065f46;
+        font-size: 1.2em;
+    }
+
+    .completion-text {
+        color: #065f46;
+        font-size: 0.9em;
+        font-weight: 600;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border-radius: 16px;
+        border: 2px dashed #d1d5db;
+    }
+
+    .empty-state i {
+        font-size: 5em;
+        color: #d1d5db;
+        margin-bottom: 25px;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5em;
+        color: #374151;
+        margin-bottom: 12px;
+    }
+
+    .empty-state p {
+        font-size: 1em;
+        color: #6b7280;
+        margin-bottom: 25px;
+    }
+
+    .empty-state a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state a:hover {
+        background: linear-gradient(135deg, #2d3a82 0%, #36489e 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(54, 72, 158, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .history-container {
+            margin: 15px;
+            border-radius: 15px;
+        }
+
+        .history-main {
+            padding: 25px 20px 30px;
+        }
+
+        .order-card {
+            padding: 20px;
+        }
+
+        .completed-timeline {
+            padding: 0 10px;
+        }
+
+        .completed-timeline::before {
+            left: 10px;
+            right: 10px;
+        }
+
+        .status-icon {
+            width: 35px;
+            height: 35px;
+            font-size: 0.9em;
+        }
+
+        .status-label {
+            font-size: 0.7em;
+            max-width: 60px;
+        }
+    }
+</style>
+
+<div class="history-container">
+    <div class="history-header">
+        <a href="{% url 'main_menu' %}" class="btn-back">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <h1 class="history-title">Order History</h1>
+    </div>
+
+    <div class="history-main">
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div>
+                        <h3 class="order-id">Order #{{ order.id }}</h3>
+                        <p class="order-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ order.created_at|date:"F d, Y" }}
+                        </p>
+                    </div>
+                    <span class="completed-badge">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </span>
+                </div>
+
+                <!-- Completed Timeline -->
+                <div class="completed-timeline">
+                    <div class="status-step">
+                        <div class="status-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="status-label">Order Placed</span>
+                    </div>
+
+                    <div class="status-step">
+                        <div class="status-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="status-label">Processed</span>
+                    </div>
+
+                    <div class="status-step">
+                        <div class="status-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="status-label">Shipped</span>
+                    </div>
+
+                    <div class="status-step">
+                        <div class="status-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <span class="status-label">Delivered</span>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="order-items">
+                    <div class="items-header">
+                        <i class="fas fa-list"></i> Order Items
+                    </div>
+                    {% for item in order.items.all %}
+                    <div class="item-row">
+                        <span class="item-name">{{ item.medicine.name }}</span>
+                        <span class="item-quantity">Qty: {{ item.quantity }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Completion Info -->
+                <div class="completion-info">
+                    <i class="fas fa-box-check"></i>
+                    <span class="completion-text">This order has been successfully delivered and completed.</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-history"></i>
+                <h3>No Order History</h3>
+                <p>You don't have any completed orders yet.</p>
+                <a href="{% url 'medicine_list' %}">
+                    <i class="fas fa-pills"></i> Browse Medicines
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
