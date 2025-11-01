@@ -131,6 +131,8 @@
         font-size: 1.8em;
     }
 
+
+
     /* Announcement Section */
     .announcement-section h3 {
         color: #36489e;
@@ -361,7 +363,7 @@
             <p>What would you like to do today?</p>
         </div>
 
-        <!-- ACTION BUTTON GRID (NO 6.1-6.3) -->
+        <!-- ACTION BUTTON GRID -->
         <div class="menu-grid">
             <button onclick="toggleProfileSidebar(true)" class="menu-btn">
                 <i class="fas fa-user-circle"></i>
@@ -379,9 +381,14 @@
                 <i class="fas fa-bullhorn"></i>
                 <span>View Announcements</span>
             </a>
-            <a href="{% url 'delivery_page' %}" class="menu-btn">
+            <a href="{% url 'track_delivery' %}" class="menu-btn">
                 <i class="fas fa-truck"></i>
                 <span>Track Delivery</span>
+            </a>
+            <!-- Order History Button -->
+            <a href="{% url 'order_history' %}" class="menu-btn">
+                <i class="fas fa-history"></i>
+                <span>Order History</span>
             </a>
         </div>
 
@@ -437,7 +444,7 @@
                 <i class="fas fa-file-alt"></i> View Documents
             </a>
             <!-- 6.3 Order History -->
-            <a href="{% url 'medicine_history' %}" class="sidebar-link">
+            <a href="{% url 'order_history' %}" class="sidebar-link">
                 <i class="fas fa-history"></i> Order History
             </a>
             <a href="{% url 'profile_view' %}" class="sidebar-link">
