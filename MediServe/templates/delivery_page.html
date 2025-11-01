@@ -1,0 +1,321 @@
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block title %}Admin Delivery Control{% endblock %}
+
+    {% block content %}
+    <style>
+        body {
+            background: linear-gradient(135deg, #E3EBEE 0%, #FFFFFF 100%);
+            min-height: 100vh;
+        }
+
+        .delivery-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 40px auto;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .delivery-header {
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #FFFFFF;
+            border-bottom: 3px solid #ffc107;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background-color: #ffe6e6;
+            color: #d93025;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            border: 2px solid #ffe6e6;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: #ffcccc;
+            border-color: #d93025;
+        }
+
+        .delivery-header h1 {
+            font-size: 1.6em;
+            font-weight: 700;
+            color: #36489e;
+            margin: 0;
+        }
+
+        .btn-assign {
+            background-color: #E3EBEE;
+            color: #666;
+            padding: 12px 20px;
+            font-weight: 700;
+            border-radius: 10px;
+            border: 2px solid #E3EBEE;
+            cursor: not-allowed;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .delivery-main {
+            padding: 35px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .order-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-card {
+            background-color: #FFFFFF;
+            border: 2px solid #ffc107;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 3px 12px rgba(255,193,7,0.15);
+            transition: all 0.2s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,193,7,0.25);
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .order-details strong {
+            font-size: 1.3em;
+            color: #36489e;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .order-details p {
+            font-size: 0.95em;
+            color: #777;
+            margin: 0;
+        }
+
+        .order-items {
+            margin-top: 15px;
+            background: #f9f9f9;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+
+        .order-items h4 {
+            font-size: 1em;
+            font-weight: 700;
+            color: #36489e;
+            margin-bottom: 8px;
+        }
+
+        .order-items ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .order-items li {
+            margin-bottom: 5px;
+            font-size: 0.95em;
+            color: #333;
+        }
+
+        .status-badge {
+            font-weight: 700;
+            font-size: 0.95em;
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-shipped {
+            color: #FFFFFF;
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        }
+
+        .status-processing {
+            color: #333;
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-action {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .btn-ship {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: #FFFFFF;
+            box-shadow: 0 3px 12px rgba(0,123,255,0.3);
+        }
+
+        .btn-ship:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0,123,255,0.4);
+        }
+
+        .btn-complete {
+            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            color: #FFFFFF;
+            box-shadow: 0 3px 12px rgba(40,167,69,0.3);
+        }
+
+        .btn-complete:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(40,167,69,0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            border: 3px dashed #ffc107;
+            border-radius: 12px;
+            background-color: #fff9e6;
+        }
+
+        .empty-state i {
+            font-size: 4em;
+            color: #ffc107;
+            opacity: 0.4;
+            margin-bottom: 15px;
+        }
+
+        .empty-state .title {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #36489e;
+            margin-bottom: 8px;
+        }
+
+        .empty-state .subtitle {
+            color: #666;
+            font-size: 1em;
+        }
+    </style>
+
+    <div class="delivery-container">
+        <header class="delivery-header">
+            <div class="header-left">
+                <a href="{% url 'admin_menu' %}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>Orders in Processing & Shipping</h1>
+            </div>
+            <button class="btn-assign">
+                <i class="fas fa-plus"></i> Assign New Driver
+            </button>
+        </header>
+
+        <main class="delivery-main">
+            <p>Manage order fulfillment and view full order details below.</p>
+
+            <div class="order-list">
+                {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-info">
+                            <div class="order-details">
+                                <strong>Order #{{ order.id }}</strong>
+                                <p>Customer: {{ order.user.username }}</p>
+                                <p>Date: {{ order.created_at|date:"M d, Y - h:i A" }}</p>
+                            </div>
+                            <span class="status-badge {% if order.status == 'Shipped' %}status-shipped{% else %}status-processing{% endif %}">
+                                <i class="fas {% if order.status == 'Shipped' %}fa-shipping-fast{% else %}fa-clock{% endif %}"></i>
+                                {{ order.status|upper }}
+                            </span>
+                        </div>
+
+                        <!-- 🧾 Order Details Section -->
+                        <div class="order-items">
+                            <h4>Order Details:</h4>
+                            <ul>
+                                {% for item in order.items.all %}
+                                    <li>
+                                        <strong>{{ item.medicine.name }}</strong> — Quantity: {{ item.quantity }}
+                                        {% if item.special_request %}
+                                            <br><span style="color:#5c74e3;">📝 Note: {{ item.special_request }}</span>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <form method="post" action="{% url 'delivery_page' %}" style="margin:0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <div class="action-buttons">
+                                <button type="submit" name="action" value="ship" class="btn-action btn-ship">
+                                    <i class="fas fa-shipping-fast"></i> Mark Shipped
+                                </button>
+                                <button type="submit" name="action" value="complete" class="btn-action btn-complete">
+                                    <i class="fas fa-check-double"></i> Mark Completed
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                {% empty %}
+                    <div class="empty-state">
+                        <i class="fas fa-truck"></i>
+                        <span class="title">No Active Deliveries</span>
+                        <span class="subtitle">No orders currently in the queue for processing or delivery.</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    {% endblock %}
