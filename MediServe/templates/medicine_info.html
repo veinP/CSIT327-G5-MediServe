@@ -17,10 +17,9 @@
         min-height: 100vh;
     }
 
-    /* Change: Reduced max-width further from 850px to 750px for a much smaller horizontal rectangle */
     .page-container {
         width: 100%;
-        max-width: 1100px; /* MADE THE RECTANGLE SMALLER (HORIZONTAL) */
+        max-width: 1100px;
         margin: 0 auto;
         background-color: #FFFFFF;
         box-shadow: 0 0 30px rgba(0, 0, 0, 0.08);
@@ -28,8 +27,7 @@
 
     /* Header */
     .page-header {
-        /* Reduced padding to match smaller container */
-        padding: 18px 25px; 
+        padding: 18px 25px;
         background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
         display: flex;
         align-items: center;
@@ -40,8 +38,8 @@
         background-color: rgba(255, 255, 255, 0.15);
         color: #FFFFFF;
         border-radius: 10px;
-        width: 38px; /* Reduced size slightly */
-        height: 38px; /* Reduced size slightly */
+        width: 38px;
+        height: 38px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -58,7 +56,7 @@
     }
 
     .page-title {
-        font-size: 1.5em; /* Reduced font size slightly */
+        font-size: 1.5em;
         color: #FFFFFF;
         font-weight: 600;
         letter-spacing: 0.3px;
@@ -66,16 +64,13 @@
 
     /* Main Content */
     .main-content {
-        /* Reduced padding to match smaller container */
         padding: 25px;
     }
 
     .medicine-grid {
         display: grid;
-        /* Adjusted the image column width to be smaller */
         grid-template-columns: 240px 1fr;
-        /* Reduced gap */
-        gap: 25px; 
+        gap: 25px;
         margin-bottom: 25px;
     }
 
@@ -86,9 +81,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 20px; /* Reduced padding */
-        /* Reduced height to maintain a good aspect ratio in a smaller container */
-        height: 220px; 
+        padding: 20px;
+        height: 220px;
         border: 2px solid #E3EBEE;
         position: relative;
         overflow: hidden;
@@ -97,8 +91,8 @@
     .image-section::before {
         content: '';
         position: absolute;
-        width: 120px; /* Reduced size */
-        height: 120px; /* Reduced size */
+        width: 120px;
+        height: 120px;
         background: radial-gradient(circle, rgba(54, 72, 158, 0.08) 0%, transparent 70%);
         border-radius: 50%;
         top: -40px;
@@ -107,7 +101,7 @@
 
     .medicine-img {
         max-width: 90%;
-        max-height: 180px; /* Adjusted max-height to fit the new image section height */
+        max-height: 180px;
         object-fit: contain;
         border-radius: 8px;
         position: relative;
@@ -121,7 +115,7 @@
     }
 
     .no-image-placeholder i {
-        font-size: 3.5em; /* Reduced size */
+        font-size: 3.5em;
         opacity: 0.3;
         margin-bottom: 8px;
         display: block;
@@ -140,7 +134,7 @@
 
     .medicine-name {
         color: #1a202c;
-        font-size: 1.8em; /* Reduced font size */
+        font-size: 1.8em;
         font-weight: 700;
         margin-bottom: 5px;
         line-height: 1.2;
@@ -151,10 +145,10 @@
         display: inline-flex;
         align-items: center;
         gap: 5px;
-        padding: 4px 8px; /* Reduced padding */
+        padding: 4px 8px;
         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
         border-radius: 7px;
-        font-size: 0.75em; /* Reduced font size */
+        font-size: 0.75em;
         color: #155724;
         font-weight: 700;
         border: 1px solid #b1dfbb;
@@ -167,10 +161,9 @@
         font-size: 0.9em;
     }
 
-    /* Badges Row */
     .badges-row {
         display: flex;
-        gap: 8px; /* Reduced gap */
+        gap: 8px;
         flex-wrap: wrap;
         margin-bottom: 5px;
     }
@@ -179,26 +172,20 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 10px; /* Reduced padding */
+        padding: 6px 10px;
         border-radius: 7px;
-        font-size: 0.8em; /* Reduced font size */
+        font-size: 0.8em;
         font-weight: 600;
         background-color: #f0f4f8;
         color: #36489e;
         border: 1px solid #d9e2ec;
     }
 
-    .info-badge i {
-        font-size: 0.9em;
-        opacity: 0.8;
-    }
-
-    /* Info Boxes */
     .info-box {
-        padding: 10px 12px; /* Reduced padding */
+        padding: 10px 12px;
         background-color: #f8f9fc;
         border-radius: 9px;
-        border-left: 3px solid #36489e; /* Reduced border size */
+        border-left: 3px solid #36489e;
         margin-bottom: 8px;
     }
 
@@ -208,26 +195,22 @@
         gap: 8px;
         color: #36489e;
         font-weight: 700;
-        font-size: 0.75em; /* Reduced font size */
+        font-size: 0.75em;
         margin-bottom: 4px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
 
-    .info-box-label i {
-        font-size: 1em;
-    }
-
     .info-box-content {
         color: #374151;
-        font-size: 0.88em; /* Reduced font size slightly */
+        font-size: 0.88em;
         line-height: 1.5;
     }
 
     .description-box {
-        padding: 12px; /* Reduced padding */
+        padding: 12px;
         background-color: #ffffff;
-        border: 1px solid #e5e7eb; /* Reduced border thickness */
+        border: 1px solid #e5e7eb;
         border-radius: 9px;
     }
 
@@ -237,7 +220,7 @@
         gap: 8px;
         color: #36489e;
         font-weight: 700;
-        font-size: 0.75em; /* Reduced font size */
+        font-size: 0.75em;
         margin-bottom: 6px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -245,19 +228,19 @@
 
     .description-box-content {
         color: #4b5563;
-        font-size: 0.88em; /* Reduced font size slightly */
+        font-size: 0.88em;
         line-height: 1.6;
     }
 
-    /* Stock Badge */
+    /* Stock Status */
     .stock-status {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 12px; /* Reduced padding */
-        border-radius: 20px; /* Adjusted border radius */
+        padding: 6px 12px;
+        border-radius: 20px;
         font-weight: 700;
-        font-size: 0.8em; /* Reduced font size */
+        font-size: 0.8em;
         margin-top: 5px;
     }
 
@@ -279,25 +262,20 @@
         border: 1px solid #f5c6cb;
     }
 
-    .stock-status i {
-        font-size: 1em;
-    }
-
-    /* Order Form Section */
+    /* Order Form */
     .order-form-section {
-        /* Reduced max-width slightly to match the smaller container, but since you said I can expand the width, I will leave the max-width relative to the page-container */
-        max-width: 100%; 
+        max-width: 100%;
         background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
-        padding: 20px; /* Reduced padding */
+        padding: 20px;
         border-radius: 10px;
         border: 1px solid #e5e7eb;
     }
 
     .form-title {
         color: #1a202c;
-        font-size: 1.1em; /* Reduced font size */
+        font-size: 1.1em;
         font-weight: 700;
-        margin-bottom: 15px; /* Reduced margin */
+        margin-bottom: 15px;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -305,33 +283,21 @@
 
     .form-title i {
         color: #36489e;
-        font-size: 1em;
     }
 
     .order-form {
         display: flex;
         flex-direction: column;
-        gap: 12px; /* Reduced gap */
-    }
-
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px; /* Reduced gap */
+        gap: 12px;
     }
 
     .form-field label {
         font-weight: 600;
         color: #374151;
-        font-size: 0.85em; /* Reduced font size */
+        font-size: 0.85em;
         display: flex;
         align-items: center;
         gap: 6px;
-    }
-
-    .form-field label i {
-        color: #36489e;
-        font-size: 0.9em;
     }
 
     .form-input {
@@ -339,36 +305,28 @@
         padding: 10px 14px;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
-        font-size: 0.88em; /* Reduced font size slightly */
+        font-size: 0.88em;
         transition: all 0.3s ease;
-        font-family: inherit;
-        background-color: #ffffff;
     }
 
     .form-input:focus {
         outline: none;
         border-color: #36489e;
-        box-shadow: 0 0 0 3px rgba(54, 72, 158, 0.1); /* Reduced box shadow */
-    }
-
-    .form-input:disabled {
-        background-color: #f3f4f6;
-        cursor: not-allowed;
-        opacity: 0.6;
+        box-shadow: 0 0 0 3px rgba(54, 72, 158, 0.1);
     }
 
     .form-textarea {
         resize: vertical;
-        min-height: 70px; /* Reduced min-height */
+        min-height: 70px;
     }
 
     .submit-btn {
         width: 100%;
-        padding: 10px 18px; /* Reduced padding */
+        padding: 10px 18px;
         border: none;
         border-radius: 8px;
         color: white;
-        font-size: 0.95em; /* Reduced font size slightly */
+        font-size: 0.95em;
         font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -376,70 +334,24 @@
         align-items: center;
         justify-content: center;
         gap: 8px;
-        font-family: inherit;
         margin-top: 8px;
-    }
-
-    .submit-btn:not(:disabled) {
         background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
-        box-shadow: 0 3px 10px rgba(54, 72, 158, 0.2); /* Reduced box shadow */
     }
 
-    .submit-btn:not(:disabled):hover {
+    .submit-btn:hover {
         background: linear-gradient(135deg, #2a3875 0%, #36489e 100%);
-        transform: translateY(-1px); /* Reduced hover lift */
-        box-shadow: 0 4px 15px rgba(54, 72, 158, 0.3); /* Reduced hover box shadow */
-    }
-
-    .submit-btn:not(:disabled):active {
-        transform: translateY(0);
+        transform: translateY(-1px);
     }
 
     .submit-btn:disabled {
         background-color: #9ca3af;
         cursor: not-allowed;
-        box-shadow: none;
     }
 
-    .submit-btn i {
-        font-size: 1.1em;
-    }
-
-    /* Responsive */
-    @media (max-width: 750px) { /* Changed 850px to 750px to match new max-width */
+    @media (max-width: 750px) {
         .medicine-grid {
             grid-template-columns: 1fr;
             gap: 20px;
-        }
-
-        .image-section {
-            height: 200px; /* Adjusted height for mobile stacking */
-        }
-
-        .order-form-section {
-            max-width: 100%;
-        }
-    }
-
-    @media (max-width: 500px) {
-        .page-header {
-            padding: 15px 20px;
-        }
-
-        .page-title {
-            font-size: 1.2em;
-        }
-
-        .main-content {
-            padding: 20px;
-        }
-
-        .medicine-name {
-            font-size: 1.5em;
-        }
-
-        .order-form-section {
-            padding: 20px 15px;
         }
     }
 </style>
@@ -466,35 +378,25 @@
             </div>
 
             <div class="details-section">
-                <div>
-                    <h2 class="medicine-name">{{ medicine.name }}</h2>
-                    
-                    <div class="free-tag">
-                        <i class="fas fa-gift"></i>
-                        Free Medicine
-                    </div>
+                <h2 class="medicine-name">{{ medicine.name }}</h2>
 
-                    <div class="badges-row">
-                        {% if medicine.brand %}
-                            <span class="info-badge">
-                                <i class="fas fa-tag"></i>
-                                {{ medicine.brand }}
-                            </span>
-                        {% endif %}
-                        {% if medicine.category %}
-                            <span class="info-badge">
-                                <i class="fas fa-folder"></i>
-                                {{ medicine.category }}
-                            </span>
-                        {% endif %}
-                    </div>
+                <div class="free-tag">
+                    <i class="fas fa-gift"></i> Free Medicine
+                </div>
+
+                <div class="badges-row">
+                    {% if medicine.brand %}
+                        <span class="info-badge"><i class="fas fa-tag"></i>{{ medicine.brand }}</span>
+                    {% endif %}
+                    {% if medicine.category %}
+                        <span class="info-badge"><i class="fas fa-folder"></i>{{ medicine.category }}</span>
+                    {% endif %}
                 </div>
 
                 {% if medicine.dosage %}
                     <div class="info-box">
                         <div class="info-box-label">
-                            <i class="fas fa-prescription-bottle"></i>
-                            Dosage Information
+                            <i class="fas fa-prescription-bottle"></i> Dosage
                         </div>
                         <div class="info-box-content">{{ medicine.dosage }}</div>
                     </div>
@@ -503,8 +405,7 @@
                 {% if medicine.description %}
                     <div class="description-box">
                         <div class="description-box-label">
-                            <i class="fas fa-info-circle"></i>
-                            Description
+                            <i class="fas fa-info-circle"></i> Description
                         </div>
                         <div class="description-box-content">{{ medicine.description }}</div>
                     </div>
@@ -515,9 +416,9 @@
                         {% if stock == 0 %}
                             <i class="fas fa-times-circle"></i> Out of Stock
                         {% elif stock <= 10 %}
-                            <i class="fas fa-exclamation-circle"></i> {{ stock }} units in stock
+                            <i class="fas fa-exclamation-circle"></i> {{ stock }} units left
                         {% else %}
-                            <i class="fas fa-check-circle"></i> {{ stock }} units in stock
+                            <i class="fas fa-check-circle"></i> {{ stock }} units available
                         {% endif %}
                     </div>
                 {% endwith %}
@@ -526,46 +427,26 @@
 
         <div class="order-form-section">
             <div class="form-title">
-                <i class="fas fa-shopping-cart"></i>
-                Place Your Order
+                <i class="fas fa-hand-holding-medical"></i> Request Medicine
             </div>
 
-            <form method="POST" action="{% url 'medicine_info' medicine_id=medicine.id %}" class="order-form">
+            <form method="POST" action="{% url 'add_to_order' medicine_id=medicine.id %}" class="order-form">
                 {% csrf_token %}
-                
                 <div class="form-field">
-                    <label for="quantity">
-                        <i class="fas fa-sort-numeric-up"></i>
-                        Quantity to Order:
-                    </label>
-                    <input type="number" 
-                           id="quantity" 
-                           name="quantity" 
-                           min="1" 
-                           max="{{ medicine.stock_quantity }}" 
-                           value="1" 
-                           class="form-input"
-                           {% if medicine.stock_quantity == 0 %}disabled{% endif %} 
-                           required>
+                    <label for="quantity"><i class="fas fa-sort-numeric-up"></i> Quantity:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" max="{{ medicine.stock_quantity }}" value="1" class="form-input" {% if medicine.stock_quantity == 0 %}disabled{% endif %} required>
                 </div>
 
                 <div class="form-field">
-                    <label for="specialRequest">
-                        <i class="fas fa-comment-dots"></i>
-                        Special Request (Optional):
-                    </label>
-                    <textarea id="specialRequest" 
-                              name="special_request" 
-                              class="form-input form-textarea"
-                              placeholder="e.g., Request specific brand or delivery note."
-                              {% if medicine.stock_quantity == 0 %}disabled{% endif %}></textarea>
+                    <label for="specialRequest"><i class="fas fa-comment-dots"></i> Special Request (Optional):</label>
+                    <textarea id="specialRequest" name="special_request" class="form-input form-textarea" placeholder="e.g., Request specific brand or note." {% if medicine.stock_quantity == 0 %}disabled{% endif %}></textarea>
                 </div>
 
                 <button type="submit" class="submit-btn" {% if medicine.stock_quantity == 0 %}disabled{% endif %}>
                     {% if medicine.stock_quantity == 0 %}
                         <i class="fas fa-ban"></i> Out of Stock
                     {% else %}
-                        <i class="fas fa-cart-plus"></i> Add to Order
+                        <i class="fas fa-hand-holding-medical"></i> Submit Request
                     {% endif %}
                 </button>
             </form>
