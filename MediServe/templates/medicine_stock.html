@@ -1,4 +1,3 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
@@ -13,7 +12,7 @@
             <a href="{% url 'admin_menu' %}" class="btn" style="
                 padding: 8px 10px;
                 margin-right: 15px;
-                background-color: #f7f9fa;
+                background-color: #fff5f5;
                 color: #dc3545;
                 border-radius: 50%;
                 width: 40px;
@@ -21,7 +20,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                border: 1px solid #ddd;">
+                border: 2px solid #dc3545;">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1 style="font-size: 1.5em; color: #dc3545;">Medicine Stock</h1>
@@ -29,7 +28,7 @@
 
         <button onclick="document.getElementById('addMedicineModal').style.display='flex'"
                 style="background-color: #28a745; color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
-            <i class="fas fa-plus"></i> Add New Medicine
+            <i class="fas fa-plus"></i> Add New Post
         </button>
     </header>
 
@@ -65,24 +64,46 @@
     <!-- MAIN CONTENT AREA -->
     <main style="padding: 40px;">
         <p style="color: #555; margin-bottom: 30px;">
-            Inventory overview. Stock levels are color-coded (Green: >50, Yellow: 10–50, Red: <10).
+            Important notices from the Barangay and MediServe.
         </p>
 
         <div class="stock-list-view" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
             {% for medicine in medicines %}
-                {% if medicine.stock_quantity > 50 %}
-                    {% with color="#28a745" %}
-                        {% include 'medicine_stock_item.html' %}
-                    {% endwith %}
-                {% elif medicine.stock_quantity > 10 %}
-                    {% with color="#ffc107" %}
-                        {% include 'medicine_stock_item.html' %}
-                    {% endwith %}
-                {% else %}
-                    {% with color="#dc3545" %}
-                        {% include 'medicine_stock_item.html' %}
-                    {% endwith %}
-                {% endif %}
+                <div style="border-left: 6px solid
+                            {% if medicine.stock_quantity > 50 %}#28a745
+                            {% elif medicine.stock_quantity > 10 %}#ffc107
+                            {% else %}#dc3545{% endif %};
+                            border-radius: 6px; padding: 15px 20px;
+                            display: flex; justify-content: space-between;
+                            align-items: flex-start; background-color: #f8f9fa; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 8px 0; font-size: 1.15em; color: #dc3545; font-weight: 600;">
+                            {{ medicine.name }}
+                        </h3>
+                        <p style="margin: 0 0 12px 0; color: #555; line-height: 1.5;">
+                            {{ medicine.brand }} | {{ medicine.category }}
+                        </p>
+                        <p style="margin: 2px 0; font-size: 0.9em; color: #666;">
+                            Stock: {{ medicine.stock_quantity }}
+                        </p>
+                        <p style="margin: 2px 0; font-size: 0.85em; color: #888;">
+                            Expiry: {{ medicine.expiry_date|date:"M. d, Y" }}
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-shrink: 0; margin-top: 4px;">
+                        <button onclick="openConfirmModal('edit', '{{ medicine.name }}', '{% url 'edit_medicine' medicine.id %}')"
+                                style="background-color: #ffc107; color: #333; border: none; padding: 8px 14px; border-radius: 5px;
+                                       cursor: pointer; font-size: 0.9em; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+
+                        <button onclick="openConfirmModal('delete', '{{ medicine.name }}', '{% url 'delete_medicine' medicine.id %}')"
+                                style="background-color: #dc3545; color: #fff; border: none; padding: 8px 14px; border-radius: 5px;
+                                       cursor: pointer; font-size: 0.9em; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
             {% empty %}
                 <p style="text-align: center; padding: 30px; border: 1px solid #ddd; border-radius: 8px;">
                     No medicines currently in the inventory.
@@ -102,7 +123,7 @@
 
         <!-- Header -->
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 style="font-size:1.2em; color:#36489e; margin:0;">Add New Medicine</h2>
+            <h2 style="font-size:1.2em; color:#dc3545; margin:0;">Add New Medicine</h2>
             <button type="button" onclick="document.getElementById('addMedicineModal').style.display='none'"
                     style="background:none; border:none; font-size:1.3em; color:#888; cursor:pointer;">&times;</button>
         </div>
@@ -110,7 +131,6 @@
         <!-- Form -->
         <form method="POST" style="display:flex; flex-direction:column; gap:12px;">
             {% csrf_token %}
-
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div>
                     <label style="font-size:0.85em; color:#444;">Name</label>
@@ -132,15 +152,9 @@
                 {{ form.description }}
             </div>
 
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div>
-                    <label style="font-size:0.85em; color:#444;">Stock Quantity</label>
-                    {{ form.stock_quantity }}
-                </div>
-                <div>
-                    <label style="font-size:0.85em; color:#444;">Price</label>
-                    {{ form.price }}
-                </div>
+            <div>
+                <label style="font-size:0.85em; color:#444;">Stock Quantity</label>
+                {{ form.stock_quantity }}
             </div>
 
             <div>
@@ -166,13 +180,100 @@
     </div>
 </div>
 
+<!-- CONFIRMATION MODAL (Matching Announcements Style) -->
+<div id="confirmModal"
+     style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+            background-color:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1100;">
+  <div style="background-color:#fff; padding:40px 35px; border-radius:12px; width:400px;
+              box-shadow:0 8px 30px rgba(0,0,0,0.2); text-align:center;">
+
+    <!-- Circular Icon with Question Mark -->
+    <div style="width:80px; height:80px; border-radius:50%; border:4px solid #6c757d;
+                display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
+                background-color:#f8f9fa;">
+      <span style="font-size:3em; color:#6c757d; font-weight:300;">?</span>
+    </div>
+
+    <!-- Modal Title -->
+    <h3 id="confirmTitle" style="margin:0 0 15px 0; color:#333; font-size:1.3em; font-weight:600;">
+      Edit this medicine?
+    </h3>
+
+    <!-- Modal Message -->
+    <p id="confirmMessage" style="margin:0 0 25px 0; color:#666; font-size:0.95em; line-height:1.5;">
+      You will be redirected to the edit form.
+    </p>
+
+    <!-- Action Buttons -->
+    <div style="display:flex; justify-content:center; gap:12px;">
+      <button id="confirmYesBtn"
+              style="border:none; color:#fff; padding:10px 24px; border-radius:6px;
+                     cursor:pointer; background-color:#28a745; font-size:0.95em;
+                     font-weight:500; transition:background-color 0.2s;">
+        Yes, edit
+      </button>
+      <button onclick="closeConfirmModal()"
+              style="background-color:#6c757d; border:none; color:#fff; padding:10px 24px;
+                     border-radius:6px; cursor:pointer; font-size:0.95em; font-weight:500;
+                     transition:background-color 0.2s;">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Hover effects for buttons */
+button:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+#confirmYesBtn:hover {
+  filter: brightness(0.95);
+}
+
+button[onclick="closeConfirmModal()"]:hover {
+  filter: brightness(0.9);
+}
+</style>
+
 <script>
 window.onclick = function(event) {
   const modal = document.getElementById('addMedicineModal');
-  if (event.target === modal) {
-    modal.style.display = 'none';
-  }
+  const confirmModal = document.getElementById('confirmModal');
+  if (event.target === modal) modal.style.display = 'none';
+  if (event.target === confirmModal) confirmModal.style.display = 'none';
 };
-</script>
 
+// Custom confirmation modal matching announcements style
+function openConfirmModal(type, name, url) {
+  const modal = document.getElementById('confirmModal');
+  const title = document.getElementById('confirmTitle');
+  const message = document.getElementById('confirmMessage');
+  const confirmBtn = document.getElementById('confirmYesBtn');
+
+  if (type === 'edit') {
+    title.textContent = `Edit this medicine?`;
+    message.textContent = `You will be redirected to the edit form for "${name}".`;
+    confirmBtn.textContent = 'Yes, edit';
+    confirmBtn.style.backgroundColor = '#28a745';
+  } else if (type === 'delete') {
+    title.textContent = `Delete this medicine?`;
+    message.textContent = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+    confirmBtn.textContent = 'Yes, delete';
+    confirmBtn.style.backgroundColor = '#dc3545';
+  }
+
+  confirmBtn.onclick = function() {
+    window.location.href = url;
+  };
+
+  modal.style.display = 'flex';
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').style.display = 'none';
+}
+</script>
 {% endblock %}

@@ -1,13 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.conf import settings
-from supabase import create_client
 from .models import Medicine
 from .forms import MedicineForm
-
-# Initialize Supabase client
-supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 
 # -------------------------------------------------------------------
@@ -56,43 +51,24 @@ def medicine_records(request):
 # -------------------------------------------------------------------
 @login_required
 def edit_medicine(request, id):
-    """Edit medicine both in local DB and Supabase."""
-    local_medicine = Medicine.objects.filter(id=id).first()
-
-    # Get from Supabase
-    response = supabase.table("tblmedicine").select("*").eq("id", id).single().execute()
-    medicine_data = response.data
-
-    if not medicine_data:
-        messages.error(request, "⚠️ Medicine not found.")
-        return redirect('medicine_stock')
+    """Edit medicine details."""
+    medicine = get_object_or_404(Medicine, id=id)
 
     if request.method == 'POST':
-        stock_quantity = request.POST.get("stock_quantity")
-        price = request.POST.get("price")
-        description = request.POST.get("description")
-
-        # Update Supabase
-        update = supabase.table("tblmedicine").update({
-            "stock_quantity": stock_quantity,
-            "price": price,
-            "description": description
-        }).eq("id", id).execute()
-
-        if update.data:
-            if local_medicine:
-                local_medicine.stock_quantity = stock_quantity
-                local_medicine.price = price
-                local_medicine.description = description
-                local_medicine.save()
-
-            messages.success(request, f"✅ {medicine_data['name']} updated successfully!")
+        form = MedicineForm(request.POST, instance=medicine)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"✅ {medicine.name} updated successfully!")
+            return redirect('medicine_stock')
         else:
-            messages.error(request, "⚠️ Failed to update medicine. Please try again.")
+            messages.error(request, "⚠️ Please correct the errors below.")
+    else:
+        form = MedicineForm(instance=medicine)
 
-        return redirect('medicine_stock')
-
-    return render(request, 'edit_medicine.html', {'medicine': medicine_data})
+    return render(request, 'edit_medicine.html', {
+        'form': form,
+        'medicine': medicine,
+    })
 
 
 # -------------------------------------------------------------------
@@ -100,18 +76,15 @@ def edit_medicine(request, id):
 # -------------------------------------------------------------------
 @login_required
 def delete_medicine(request, id):
-    """Delete medicine directly (both local and Supabase)."""
+    """Delete medicine directly from local DB."""
     if request.method == "POST":
         try:
-            # 1️⃣ Delete from Supabase
-            supabase.table("tblmedicine").delete().eq("id", id).execute()
-
-            # 2️⃣ Delete from local DB (if exists)
-            local_medicine = Medicine.objects.filter(id=id).first()
-            if local_medicine:
-                local_medicine.delete()
-
-            messages.success(request, "🗑️ Medicine deleted successfully!")
+            medicine = Medicine.objects.get(id=id)
+            medicine_name = medicine.name
+            medicine.delete()
+            messages.success(request, f"🗑️ {medicine_name} deleted successfully!")
+        except Medicine.DoesNotExist:
+            messages.error(request, "⚠️ Medicine not found.")
         except Exception as e:
             messages.error(request, f"⚠️ Error deleting medicine: {e}")
 
@@ -119,14 +92,11 @@ def delete_medicine(request, id):
 
 
 # -------------------------------------------------------------------
-# Public Browse Page (Supabase only)
+# Public Browse Page
 # -------------------------------------------------------------------
 def medicine_list(request):
     """Public Browse Medicines page."""
-    response = supabase.table("tblmedicine").select("*").execute()
-    medicines = response.data if response.data else []
-    medicines = sorted(medicines, key=lambda x: x.get('name', '').lower())
-
+    medicines = Medicine.objects.all().order_by('name')
     return render(request, 'medicine_list.html', {'medicines': medicines})
 
 
@@ -135,11 +105,5 @@ def medicine_list(request):
 # -------------------------------------------------------------------
 def medicine_info(request, medicine_id):
     """Medicine details page."""
-    response = supabase.table("tblmedicine").select("*").eq("id", medicine_id).single().execute()
-    medicine = response.data
-
-    if not medicine:
-        messages.error(request, "⚠️ Medicine not found.")
-        return redirect("medicine_stock")
-
+    medicine = get_object_or_404(Medicine, id=medicine_id)
     return render(request, 'medicine_info.html', {'medicine': medicine})
