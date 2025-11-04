@@ -2,15 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
+
 from .forms import SignupForm, LoginForm
 from .models import Account
-from supabase import create_client
-import os
-
-# Supabase connection
-SUPABASE_URL = os.getenv("SUPABASE_URL", "https://your-supabase-url.supabase.co")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY", "your-supabase-service-role-key")
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+from apps.announcements.models import Announcement
 
 
 def home_redirect(request):
@@ -19,26 +14,32 @@ def home_redirect(request):
 
 def signup_view(request):
     if request.method == 'POST':
-        form = SignupForm(request.POST)
+        # include FILES for uploaded images
+        form = SignupForm(request.POST, request.FILES)
 
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
 
-        # if passwords match
+        # password check
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
             return render(request, 'signup.html', {'form': form})
 
-        # if email already exists
+        # existing email check
         if Account.objects.filter(email=email).exists():
             messages.error(request, 'An account with this email already exists.')
             return render(request, 'signup.html', {'form': form})
 
-        # If form is valid, save the user
         if form.is_valid():
             user = form.save(commit=False)
             user.set_password(form.cleaned_data['password'])
+
+            # Optional file fields (use request.FILES safely)
+            user.barangay_id = request.FILES.get('barangay_id')
+            user.pwd_id = request.FILES.get('pwd_id')
+            user.senior_citizen_id = request.FILES.get('senior_id')
+
             user.save()
             messages.success(request, 'Signup successful! Please log in.')
             return redirect('login')
@@ -64,7 +65,6 @@ def login_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-
                 if user.is_staff or user.is_superuser:
                     return redirect('admin_menu')
                 else:
@@ -90,14 +90,8 @@ def admin_menu_view(request):
 
 @login_required
 def main_menu_view(request):
-    """Main menu view that includes the most recent announcement."""
-    latest_announcement = None
-    try:
-        response = supabase.table("tblannouncements").select("*").order("date_posted", desc=True).limit(1).execute()
-        if response.data:
-            latest_announcement = response.data[0]
-    except Exception as e:
-        print("Error fetching announcement:", e)
+    """Main menu view that shows the most recent announcement (Django ORM only)."""
+    latest_announcement = Announcement.objects.order_by('-date_posted').first()
 
     return render(request, 'main_menu.html', {
         'latest_announcement': latest_announcement
@@ -106,7 +100,18 @@ def main_menu_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'profile_view.html', {'user': request.user})
+    profile = request.user  # since your custom user model is Account
+    if request.method == 'POST':
+        # Update logic if you allow saving form data
+        profile.first_name = request.POST.get('first_name')
+        profile.last_name = request.POST.get('last_name')
+        profile.middle_name = request.POST.get('middle_initial', '')
+        profile.date_of_birth = request.POST.get('date_of_birth')
+        profile.gender = request.POST.get('sex')
+        profile.save()
+        return redirect('profile_view')
+
+    return render(request, 'profile_view.html', {'profile': profile})
 
 
 @login_required
@@ -117,4 +122,3 @@ def settings_page(request):
 @login_required
 def feedback_page(request):
     return render(request, 'feedback.html')
-

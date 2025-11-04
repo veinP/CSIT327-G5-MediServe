@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
-from .models import Account
 from django.core.exceptions import ValidationError
 
 Account = get_user_model()
@@ -13,7 +12,22 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ['email', 'password', 'confirm_password', 'first_name', 'last_name', 'date_of_birth', 'gender']
+        fields = [
+            'email',
+            'password',
+            'confirm_password',
+            'first_name',
+            'middle_name',
+            'last_name',
+            'date_of_birth',
+            'gender',
+            'barangay_id',
+            'pwd_id',
+            'senior_citizen_id',
+        ]
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
@@ -27,7 +41,7 @@ class SignupForm(forms.ModelForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.EmailField(label='Email') 
+    username = forms.EmailField(label='Email')
 
     def clean(self):
         email = self.cleaned_data.get('username')

@@ -25,7 +25,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name="items", on_delete=models.CASCADE)
     medicine = models.ForeignKey(Medicine, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    special_request = models.TextField(blank=True)
+    special_request = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = "tblorderitems"  # ✅ link to existing table
