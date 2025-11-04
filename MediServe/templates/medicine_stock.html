@@ -97,6 +97,7 @@
                             <i class="fas fa-edit"></i> Edit
                         </button>
 
+                        <!-- UPDATED DELETE BUTTON - Uses modal confirmation -->
                         <button onclick="openConfirmModal('delete', '{{ medicine.name }}', '{% url 'delete_medicine' medicine.id %}')"
                                 style="background-color: #dc3545; color: #fff; border: none; padding: 8px 14px; border-radius: 5px;
                                        cursor: pointer; font-size: 0.9em; display: inline-flex; align-items: center; gap: 5px;">
@@ -180,18 +181,18 @@
     </div>
 </div>
 
-<!-- CONFIRMATION MODAL (Matching Announcements Style) -->
+<!-- CONFIRMATION MODAL (For Both Edit and Delete) -->
 <div id="confirmModal"
      style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
             background-color:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1100;">
   <div style="background-color:#fff; padding:40px 35px; border-radius:12px; width:400px;
               box-shadow:0 8px 30px rgba(0,0,0,0.2); text-align:center;">
 
-    <!-- Circular Icon with Question Mark -->
-    <div style="width:80px; height:80px; border-radius:50%; border:4px solid #6c757d;
+    <!-- Circular Icon -->
+    <div id="confirmIcon" style="width:80px; height:80px; border-radius:50%;
                 display:flex; align-items:center; justify-content:center; margin:0 auto 20px;
                 background-color:#f8f9fa;">
-      <span style="font-size:3em; color:#6c757d; font-weight:300;">?</span>
+      <i id="confirmIconClass" class="fas fa-question" style="font-size:2.5em;"></i>
     </div>
 
     <!-- Modal Title -->
@@ -219,6 +220,11 @@
         Cancel
       </button>
     </div>
+
+    <!-- Hidden form for delete operations -->
+    <form id="deleteForm" method="POST" style="display: none;">
+        {% csrf_token %}
+    </form>
   </div>
 </div>
 
@@ -236,9 +242,23 @@ button:hover {
 button[onclick="closeConfirmModal()"]:hover {
   filter: brightness(0.9);
 }
+
+/* Style form buttons to match other buttons */
+form button[type="submit"] {
+  transition: all 0.2s ease;
+}
+
+form button[type="submit"]:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
 </style>
 
 <script>
+// Global variables to store current action details
+let currentActionUrl = '';
+let currentActionType = '';
+
 window.onclick = function(event) {
   const modal = document.getElementById('addMedicineModal');
   const confirmModal = document.getElementById('confirmModal');
@@ -246,27 +266,73 @@ window.onclick = function(event) {
   if (event.target === confirmModal) confirmModal.style.display = 'none';
 };
 
-// Custom confirmation modal matching announcements style
+// Custom confirmation modal for both edit and delete
 function openConfirmModal(type, name, url) {
   const modal = document.getElementById('confirmModal');
   const title = document.getElementById('confirmTitle');
   const message = document.getElementById('confirmMessage');
   const confirmBtn = document.getElementById('confirmYesBtn');
+  const icon = document.getElementById('confirmIcon');
+  const iconClass = document.getElementById('confirmIconClass');
+
+  // Store the current action details
+  currentActionUrl = url;
+  currentActionType = type;
 
   if (type === 'edit') {
+    // Edit confirmation styling
+    icon.style.border = '4px solid #ffc107';
+    icon.style.backgroundColor = '#fffbf0';
+    iconClass.className = 'fas fa-edit';
+    iconClass.style.color = '#ffc107';
+
     title.textContent = `Edit this medicine?`;
     message.textContent = `You will be redirected to the edit form for "${name}".`;
     confirmBtn.textContent = 'Yes, edit';
-    confirmBtn.style.backgroundColor = '#28a745';
+    confirmBtn.style.backgroundColor = '#ffc107';
+    confirmBtn.style.color = '#333';
+
   } else if (type === 'delete') {
+    // Delete confirmation styling
+    icon.style.border = '4px solid #dc3545';
+    icon.style.backgroundColor = '#fff5f5';
+    iconClass.className = 'fas fa-trash';
+    iconClass.style.color = '#dc3545';
+
     title.textContent = `Delete this medicine?`;
     message.textContent = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
     confirmBtn.textContent = 'Yes, delete';
     confirmBtn.style.backgroundColor = '#dc3545';
+    confirmBtn.style.color = '#fff';
   }
 
+  // Set up the confirmation button action
   confirmBtn.onclick = function() {
-    window.location.href = url;
+    if (currentActionType === 'edit') {
+      // For edit, redirect to the edit page
+      window.location.href = currentActionUrl;
+    } else if (currentActionType === 'delete') {
+      // For delete, submit a POST request
+      const form = document.getElementById('deleteForm');
+      form.action = currentActionUrl;
+
+      // Create and submit the form
+      const submitForm = document.createElement('form');
+      submitForm.method = 'POST';
+      submitForm.action = currentActionUrl;
+      submitForm.style.display = 'none';
+
+      // Add CSRF token
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const csrfInput = document.createElement('input');
+      csrfInput.name = 'csrfmiddlewaretoken';
+      csrfInput.value = csrfToken;
+      csrfInput.type = 'hidden';
+      submitForm.appendChild(csrfInput);
+
+      document.body.appendChild(submitForm);
+      submitForm.submit();
+    }
   };
 
   modal.style.display = 'flex';
@@ -274,6 +340,9 @@ function openConfirmModal(type, name, url) {
 
 function closeConfirmModal() {
   document.getElementById('confirmModal').style.display = 'none';
+  // Reset action details
+  currentActionUrl = '';
+  currentActionType = '';
 }
 </script>
 {% endblock %}

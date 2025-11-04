@@ -77,7 +77,7 @@ def edit_medicine(request, id):
 @login_required
 def delete_medicine(request, id):
     """Delete medicine directly from local DB."""
-    if request.method == "POST":
+    if request.method in ["POST", "GET"]:
         try:
             medicine = Medicine.objects.get(id=id)
             medicine_name = medicine.name
@@ -89,6 +89,7 @@ def delete_medicine(request, id):
             messages.error(request, f"⚠️ Error deleting medicine: {e}")
 
     return redirect("medicine_stock")
+
 
 
 # -------------------------------------------------------------------
