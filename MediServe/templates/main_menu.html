@@ -359,7 +359,7 @@
     <!-- MAIN CONTENT AREA -->
     <div class="content-area">
         <div class="welcome-section">
-            <h1>Welcome Back!</h1>
+            <h1>Welcome back, {{ user.first_name|default:"User" }}!</h1>
             <p>What would you like to do today?</p>
         </div>
 
@@ -435,18 +435,11 @@
         </div>
 
         <div class="sidebar-menu">
-            <!-- 6.1 Return to Home -->
-            <a href="{% url 'main_menu' %}" class="sidebar-link">
-                <i class="fas fa-home"></i> Return to Home
-            </a>
             <!-- 6.2 View Documents -->
             <a href="{% url 'profile_view' %}" class="sidebar-link">
                 <i class="fas fa-file-alt"></i> View Documents
             </a>
-            <!-- 6.3 Order History -->
-            <a href="{% url 'order_history' %}" class="sidebar-link">
-                <i class="fas fa-history"></i> Order History
-            </a>
+
             <a href="{% url 'profile_view' %}" class="sidebar-link">
                 <i class="fas fa-user"></i> View/Edit Profile
             </a>
