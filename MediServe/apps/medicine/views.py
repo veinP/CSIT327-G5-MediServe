@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Q
 from .models import Medicine
 from .forms import MedicineForm
 
@@ -19,7 +20,34 @@ def medicine_history(request):
 @login_required
 def medicine_stock(request):
     """Medicine stock management (admin view)."""
-    medicines = Medicine.objects.all().order_by('name')
+    medicines = Medicine.objects.all().order_by('-id')  # Newest first
+
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    category_filter = request.GET.get('category', '')
+    stock_filter = request.GET.get('stock', '')
+
+    if search_query:
+        medicines = medicines.filter(
+            Q(name__icontains=search_query) |
+            Q(brand__icontains=search_query) |
+            Q(category__icontains=search_query) |
+            Q(description__icontains=search_query)
+        )
+
+    if category_filter:
+        medicines = medicines.filter(category__iexact=category_filter)
+
+    if stock_filter:
+        if stock_filter == 'low':
+            medicines = medicines.filter(stock_quantity__lte=10)
+        elif stock_filter == 'medium':
+            medicines = medicines.filter(stock_quantity__gt=10, stock_quantity__lte=50)
+        elif stock_filter == 'high':
+            medicines = medicines.filter(stock_quantity__gt=50)
+
+    # Get unique categories for filter dropdown
+    categories = Medicine.objects.values_list('category', flat=True).distinct()
 
     if request.method == 'POST':
         form = MedicineForm(request.POST)
@@ -35,6 +63,10 @@ def medicine_stock(request):
     return render(request, 'medicine_stock.html', {
         'medicines': medicines,
         'form': form,
+        'categories': categories,
+        'search_query': search_query,
+        'category_filter': category_filter,
+        'stock_filter': stock_filter,
     })
 
 
@@ -89,7 +121,6 @@ def delete_medicine(request, id):
             messages.error(request, f"⚠️ Error deleting medicine: {e}")
 
     return redirect("medicine_stock")
-
 
 
 # -------------------------------------------------------------------
