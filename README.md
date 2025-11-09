@@ -1,124 +1,128 @@
 
-# CSIT327-IM2-G5-MediServe Repository
-
-## Project Title & Short Description
-
-**Project Title:** MediServe: Community Health Portal  
-
-**Short Description:**  
-The MediServe project aims to address inefficiencies and challenges faced by barangay residents and local health center staff in accessing and managing medical services. This platform transforms manual processes into a convenient, centralized digital system.
-
-**Current Problem:**  
-Residents — especially the elderly and PWDs — must physically visit health centers to check medicine availability, which is time-consuming and inconvenient. Manual tracking also causes delays, errors, and inaccurate records.
-
-**MediServe Solution:**  
-MediServe provides a centralized portal to improve healthcare delivery by allowing residents to check medicine inventory and health news online, while empowering medical staff with efficient tools for inventory, orders, and data management.
+# 🏥 MediServe  
+**MediServe** is a **community health portal** designed to support barangay residents — particularly **senior citizens, PWDs, and low-income households** — by streamlining access to **free medicines** and health information.  
+It enables residents to conveniently request medicines online and track delivery updates, while health center staff manage inventory, requests, and announcements through an integrated system.
 
 ---
 
-## Key Features
+## ✨ Features
 
-The MediServe application has two main interfaces: **User Portal (Residents)** and **Admin Portal (Health Center Staff)**.
-
-### 🧍‍♂️ 1. User Portal (Barangay Residents)
-| **Feature** | **Description** |
-|--------------|----------------|
-| **Medicine Catalog** | Browse available medicines with real-time stock status (In Stock, Low Stock, Out of Stock). |
-| **Online Ordering** | Add medicines to a cart, submit an order, and confirm total price. |
-| **Queue Management** | View your queue number and estimated wait time for pickup. |
-| **Profile & History** | View/Edit profile, settings, and past orders. |
-| **Announcements** | Access health-related news, vaccine drives, and updates. |
-
-### 🧑‍⚕️ 2. Admin Portal (Health Center Staff)
-| **Feature** | **Description** |
-|--------------|----------------|
-| **Admin Dashboard** | Centralized hub accessible only by staff. |
-| **Stock Management** | View/edit medicine quantities and prices with color-coded stock alerts. |
-| **Order Fulfillment** | View and manage orders (“Processing” or “Shipped”) and mark them as completed. |
-| **Analytics & Records** | View key performance indicators and transaction logs for all stock updates. |
+### 👨‍👩‍👧‍👦 User Portal (Barangay Residents)
+- 💊 **Medicine Catalog** – Browse available medicines with real-time stock status (In Stock, Low Stock, Out of Stock).  
+- 📦 **Free Medicine Requests** – Request available medicines online at no cost.  
+- 🚚 **Delivery Tracking** – Track the status of your medicine request from processing to delivery.  
+- 👤 **Profile & History** – View and edit your personal details and see your request history.  
+- 📢 **Announcements** – Stay informed about health advisories, vaccine drives, and barangay health programs.
 
 ---
 
-## Tech Stack Used
+### 🧑‍⚕️ Admin Portal (Health Center Staff)
+- 📊 **Admin Dashboard** – Centralized hub for managing medicine inventory and user requests.  
+- 📦 **Inventory Management** – Add, update, and monitor medicine stocks with color-coded alerts.  
+- 🧾 **Request Management** – Review incoming medicine requests, update statuses, and mark deliveries as completed.   
+- 📢 **Announcement Posting** – Publish important community health updates.
 
-| **Component** | **Technology / Version** |
-|----------------|---------------------------|
-| **Backend** | Python 3.x, Django 5.x |
-| **Database** | PostgreSQL (Hosted on Supabase) |
+---
+
+## 🛠️ Tech Stack
+| Layer | Technology |
+|--------|-------------|
 | **Frontend** | Django Templates, HTML, CSS, JavaScript |
+| **Backend** | Django (Python) |
+| **Database** | Supabase (PostgreSQL) |
+| **Version Control & Collaboration** | Git + GitHub |
 
 ---
 
-## Setup & Run Instructions (Development)
+## ⚙️ Setup & Run Instructions
 
-Follow these steps to set up **MediServe** locally:
-
-### Environment Setup & Dependencies
+### 1. Clone the Repository
 ```bash
-# Create a virtual environment
-python -m venv venv
-
-# Activate the environment
-# On Windows:
-.\venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-
-# Install Django and PostgreSQL dependencies
-pip install django psycopg2-binary dj-database-url
+git clone https://github.com/veinP/CSIT327-G5-MediServe.git
+cd CSIT327-G5-MediServe
 ````
 
 ---
 
-### Database Connection & Superuser Setup
-
-Create a `.env` file in your root directory with:
+### 2. Create a Virtual Environment
 
 ```bash
-DATABASE_URL=postgres://user:password@host:port/dbname
+python -m venv venv
 ```
 
-Apply migrations:
+Activate the environment:
+
+* **Windows:**
+
+  ```bash
+  venv\Scripts\activate
+  ```
+* **macOS/Linux:**
+
+  ```bash
+  source venv/bin/activate
+  ```
+
+---
+
+### 3. Install Dependencies
 
 ```bash
-python manage.py migrate
-```
-
-Create a superuser:
-
-```bash
-python manage.py createsuperuser
+pip install -r requirements.txt
 ```
 
 ---
 
-### Running the Server
+### 4. Connect to the Database via Supabase
+
+1. Log in to your **Supabase** account.
+2. Open your MediServe project → click **“Connect”** at the top → scroll to **Session pooler**.
+3. Copy the **PostgreSQL connection string** (it looks like this):
+
+   ```
+   postgresql://postgres:[YOUR_PASSWORD]@db.[your-supabase-id].supabase.co:6543/postgres
+   ```
+4. Create a file named `.env` in the project root (same folder as `manage.py`).
+5. Paste the following inside your `.env` file:
+
+   ```
+   DATABASE_URL=postgresql://postgres:[YOUR_PASSWORD]@db.[your-supabase-id].supabase.co:6543/postgres
+   ```
+6. Save the file.
+
+⚠️ **Important:** Do **not** commit `.env` to GitHub.
+
+---
+
+### 5. Apply Database Migrations
+
+Once your Supabase `.env` is configured, run:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+---
+
+### 6. Run the Development Server
+
+Start the local Django server:
 
 ```bash
 python manage.py runserver
 ```
 
----
-
-## 🌐 Accessing the Application
-
-| **Role**           | **URL**                                                      | **Credentials**                            |
-| ------------------ | ------------------------------------------------------------ | ------------------------------------------ |
-|  **User Access**  | [http://127.0.0.1:8000/](http://127.0.0.1:8000/)             | Create a new user via the **Sign Up** page |
-| **Admin Access** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | Use your **Superuser** credentials         |
+Then open this link in your browser:
+👉 [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-## Deployed Link
+## 👨‍💻👩‍💻 Team Members
 
-*Not yet deployed.*
+| Name                         | Role           | Email                                                                     |
+| ---------------------------- | -------------- | ------------------------------------------------------------------------- |
+| **Vein Carmell Pangilinan**  | Lead Developer | [veincarmell.pangilinan@cit.edu](mailto:veincarmell.pangilinan@cit.edu)   |
+| **Franklyn John Panugaling** | Developer      | [franklynjohn.panugaling@cit.edu](mailto:franklynjohn.panugaling@cit.edu) |
+| **Kristine Eunice Pureza**   | Developer      | [kristineeunice.pureza@cit.edu](mailto:kristineeunice.pureza@cit.edu)     |
 
----
-
-## Team Members
-
-| **Name**                  | **Role**       | **CIT-U Email**                                                           |
-| ------------------------- | -------------- | ------------------------------------------------------------------------- |
-| Pangilinan, Vein Carmell  | Lead Developer | [veincarmell.pangilinan@cit.edu](mailto:veincarmell.pangilinan@cit.edu)   |
-| Panugaling, Franklyn John | Developer      | [franklynjohn.panugaling@cit.edu](mailto:franklynjohn.panugaling@cit.edu) |
-| Pureza, Kristine Eunice   | Developer      | [kristineeunice.pureza@cit.edu](mailto:kristineeunice.pureza@cit.edu)     |
