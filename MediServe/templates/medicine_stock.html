@@ -831,7 +831,7 @@
             </button>
         </div>
 
-        <form method="POST">
+        <form method="POST" action="{% url 'medicine_stock' %}">
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group">
@@ -895,16 +895,18 @@
                 Cancel
             </button>
         </div>
-
-        <form id="deleteForm" method="POST" style="display: none;">
-            {% csrf_token %}
-        </form>
     </div>
 </div>
 
 <script>
 let currentActionUrl = '';
 let currentActionType = '';
+
+// CSRF Token helper function
+function getCSRFToken() {
+    const csrfInput = document.querySelector('[name=csrfmiddlewaretoken]');
+    return csrfInput ? csrfInput.value : '';
+}
 
 window.onclick = function(event) {
     const modal = document.getElementById('addMedicineModal');
@@ -953,20 +955,22 @@ function openConfirmModal(type, name, url) {
         if (currentActionType === 'edit') {
             window.location.href = currentActionUrl;
         } else if (currentActionType === 'delete') {
-            const submitForm = document.createElement('form');
-            submitForm.method = 'POST';
-            submitForm.action = currentActionUrl;
-            submitForm.style.display = 'none';
+            // Create a form dynamically for the delete action with CSRF token
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = currentActionUrl;
+            form.style.display = 'none';
 
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            // Add CSRF token
             const csrfInput = document.createElement('input');
             csrfInput.name = 'csrfmiddlewaretoken';
-            csrfInput.value = csrfToken;
+            csrfInput.value = getCSRFToken();
             csrfInput.type = 'hidden';
-            submitForm.appendChild(csrfInput);
+            form.appendChild(csrfInput);
 
-            document.body.appendChild(submitForm);
-            submitForm.submit();
+            // Add to document and submit
+            document.body.appendChild(form);
+            form.submit();
         }
     };
 
