@@ -31,7 +31,6 @@
         flex-direction: column;
     }
 
-    /* Header */
     .delivery-header {
         padding: 25px 35px;
         background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
@@ -82,14 +81,12 @@
         z-index: 1;
     }
 
-    /* Main Content */
     .delivery-main {
         padding: 35px 40px 40px;
         overflow-y: auto;
         flex: 1;
     }
 
-    /* Custom scrollbar */
     .delivery-main::-webkit-scrollbar {
         width: 8px;
     }
@@ -104,17 +101,12 @@
         border-radius: 10px;
     }
 
-    .delivery-main::-webkit-scrollbar-thumb:hover {
-        background: #2d3a82;
-    }
-
     .orders-list {
         display: flex;
         flex-direction: column;
         gap: 20px;
     }
 
-    /* Order Card */
     .order-card {
         background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
         padding: 25px;
@@ -164,7 +156,6 @@
         gap: 6px;
     }
 
-    /* Status Timeline */
     .status-timeline {
         display: flex;
         justify-content: space-between;
@@ -212,6 +203,12 @@
         background: linear-gradient(135deg, #36489e 0%, #5c74e3 100%);
         color: #ffffff;
         box-shadow: 0 4px 12px rgba(54, 72, 158, 0.3);
+        animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
     }
 
     .status-step.completed .status-icon {
@@ -230,9 +227,9 @@
     .status-step.active .status-label,
     .status-step.completed .status-label {
         color: #1a202c;
+        font-weight: 700;
     }
 
-    /* Order Items */
     .order-items {
         margin-top: 20px;
     }
@@ -269,7 +266,6 @@
         color: #6b7280;
     }
 
-    /* Status Badge */
     .status-badge {
         display: inline-flex;
         align-items: center;
@@ -286,37 +282,35 @@
         border: 1px solid #ffd93d;
     }
 
-    .status-shipped {
+    .status-processing {
         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
         color: #155724;
         border: 1px solid #b1dfbb;
+    }
+
+    .status-outfordelivery {
+        background: linear-gradient(135deg, #cce7ff 0%, #b3d9ff 100%);
+        color: #004085;
+        border: 1px solid #99ccff;
     }
 
     .status-completed {
         background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
         color: #065f46;
         border: 1px solid #6ee7b7;
-        display: none; /* Hide completed orders */
+        display: none;
     }
 
-    /* Hide completed orders after animation */
     .order-card.completed {
         animation: fadeOut 0.5s ease-out forwards;
         pointer-events: none;
     }
 
     @keyframes fadeOut {
-        from {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        to {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(-20px); }
     }
 
-    /* Empty State */
     .empty-state {
         text-align: center;
         padding: 80px 20px;
@@ -361,41 +355,6 @@
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(54, 72, 158, 0.3);
     }
-
-    @media (max-width: 768px) {
-        .delivery-container {
-            margin: 15px;
-            border-radius: 15px;
-        }
-
-        .delivery-main {
-            padding: 25px 20px 30px;
-        }
-
-        .order-card {
-            padding: 20px;
-        }
-
-        .status-timeline {
-            padding: 0 10px;
-        }
-
-        .status-timeline::before {
-            left: 10px;
-            right: 10px;
-        }
-
-        .status-icon {
-            width: 35px;
-            height: 35px;
-            font-size: 0.9em;
-        }
-
-        .status-label {
-            font-size: 0.7em;
-            max-width: 60px;
-        }
-    }
 </style>
 
 <div class="delivery-container">
@@ -418,53 +377,43 @@
                             {{ order.created_at|date:"F d, Y" }}
                         </p>
                     </div>
-                    <span class="status-badge status-{{ order.status|lower }}">
+                    <span class="status-badge {% if order.status == 'Processing' %}status-processing{% elif order.status == 'Shipped' %}status-outfordelivery{% else %}status-{{ order.status|lower }}{% endif %}">
                         {% if order.status == "Pending" %}
                             <i class="fas fa-clock"></i> Pending
+                        {% elif order.status == "Processing" %}
+                            <i class="fas fa-cog fa-spin"></i> Processing
                         {% elif order.status == "Shipped" %}
-                            <i class="fas fa-shipping-fast"></i> Shipped
+                            <i class="fas fa-shipping-fast"></i> Out for Delivery
                         {% elif order.status == "Completed" %}
                             <i class="fas fa-check-circle"></i> Completed
                         {% endif %}
                     </span>
                 </div>
 
-                <!-- Status Timeline -->
                 <div class="status-timeline">
-                    <div class="status-step {% if order.status == 'Pending' or order.status == 'Shipped' or order.status == 'Completed' %}completed{% endif %}">
-                        <div class="status-icon">
-                            <i class="fas fa-check"></i>
-                        </div>
+                    <div class="status-step {% if order.status in 'Pending Processing Shipped Completed' %}completed{% endif %}">
+                        <div class="status-icon"><i class="fas fa-check"></i></div>
                         <span class="status-label">Order Placed</span>
                     </div>
 
-                    <div class="status-step {% if order.status == 'Shipped' or order.status == 'Completed' %}completed{% elif order.status == 'Pending' %}active{% endif %}">
-                        <div class="status-icon">
-                            <i class="fas fa-box"></i>
-                        </div>
+                    <div class="status-step {% if order.status in 'Shipped Completed' %}completed{% elif order.status == 'Processing' %}active{% endif %}">
+                        <div class="status-icon"><i class="fas fa-cog"></i></div>
                         <span class="status-label">Processing</span>
                     </div>
 
                     <div class="status-step {% if order.status == 'Completed' %}completed{% elif order.status == 'Shipped' %}active{% endif %}">
-                        <div class="status-icon">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <span class="status-label">Shipped</span>
+                        <div class="status-icon"><i class="fas fa-truck"></i></div>
+                        <span class="status-label">Out for Delivery</span>
                     </div>
 
                     <div class="status-step {% if order.status == 'Completed' %}completed{% endif %}">
-                        <div class="status-icon">
-                            <i class="fas fa-home"></i>
-                        </div>
+                        <div class="status-icon"><i class="fas fa-home"></i></div>
                         <span class="status-label">Delivered</span>
                     </div>
                 </div>
 
-                <!-- Order Items -->
                 <div class="order-items">
-                    <div class="items-header">
-                        <i class="fas fa-list"></i> Order Items
-                    </div>
+                    <div class="items-header"><i class="fas fa-list"></i> Order Items</div>
                     {% for item in order.items.all %}
                     <div class="item-row">
                         <span class="item-name">{{ item.medicine.name }}</span>
@@ -488,34 +437,27 @@
 </div>
 
 <script>
-    // Auto-remove completed orders after 5 seconds
     document.addEventListener('DOMContentLoaded', function() {
         const completedOrders = document.querySelectorAll('.order-card[data-status="Completed"]');
 
         completedOrders.forEach(function(order) {
-            setTimeout(function() {
-                order.style.animation = 'fadeOut 0.5s ease-out forwards';
-                setTimeout(function() {
-                    order.remove();
-
-                    // Check if no orders left
-                    const remainingOrders = document.querySelectorAll('.order-card').length;
-                    if (remainingOrders === 0) {
-                        const ordersList = document.querySelector('.orders-list');
-                        ordersList.innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-box-open"></i>
-                                <h3>No Active Orders</h3>
-                                <p>All your orders have been completed. Start browsing medicines!</p>
-                                <a href="{% url 'medicine_list' %}">
-                                    <i class="fas fa-pills"></i> Browse Medicines
-                                </a>
-                            </div>
-                        `;
-                    }
-                }, 500);
-            }, 5000); // 5 seconds
+            order.remove();
         });
+
+        const remainingOrders = document.querySelectorAll('.order-card').length;
+        if (remainingOrders === 0) {
+            const ordersList = document.querySelector('.orders-list');
+            ordersList.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <h3>No Active Orders</h3>
+                    <p>All your orders have been completed. Start browsing medicines!</p>
+                    <a href="{% url 'medicine_list' %}">
+                        <i class="fas fa-pills"></i> Browse Medicines
+                    </a>
+                </div>
+            `;
+        }
     });
 </script>
 
