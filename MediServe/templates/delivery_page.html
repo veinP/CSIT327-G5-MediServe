@@ -1,321 +1,406 @@
-    {% extends 'base.html' %}
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% block title %}Admin Delivery Control{% endblock %}
+{% block title %}Admin Delivery Control{% endblock %}
 
-    {% block content %}
-    <style>
-        body {
-            background: linear-gradient(135deg, #E3EBEE 0%, #FFFFFF 100%);
-            min-height: 100vh;
-        }
+{% block content %}
+<div style="width: 100%; max-width: 1400px; margin: 30px auto; padding: 0 20px;">
 
-        .delivery-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 40px auto;
-            background-color: #FFFFFF;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-        }
-
-        .delivery-header {
-            padding: 20px 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #FFFFFF;
-            border-bottom: 3px solid #ffc107;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .back-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            background-color: #ffe6e6;
-            color: #d93025;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-            border: 2px solid #ffe6e6;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .back-btn:hover {
-            background-color: #ffcccc;
-            border-color: #d93025;
-        }
-
-        .delivery-header h1 {
-            font-size: 1.6em;
-            font-weight: 700;
-            color: #36489e;
-            margin: 0;
-        }
-
-        .btn-assign {
-            background-color: #E3EBEE;
-            color: #666;
-            padding: 12px 20px;
-            font-weight: 700;
-            border-radius: 10px;
-            border: 2px solid #E3EBEE;
-            cursor: not-allowed;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-
-        .delivery-main {
-            padding: 35px;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .order-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .order-card {
-            background-color: #FFFFFF;
-            border: 2px solid #ffc107;
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 3px 12px rgba(255,193,7,0.15);
-            transition: all 0.2s ease;
-        }
-
-        .order-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,193,7,0.25);
-        }
-
-        .order-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .order-details strong {
-            font-size: 1.3em;
-            color: #36489e;
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .order-details p {
-            font-size: 0.95em;
-            color: #777;
-            margin: 0;
-        }
-
-        .order-items {
-            margin-top: 15px;
-            background: #f9f9f9;
-            padding: 10px 15px;
-            border-radius: 10px;
-            border: 1px solid #eee;
-        }
-
-        .order-items h4 {
-            font-size: 1em;
-            font-weight: 700;
-            color: #36489e;
-            margin-bottom: 8px;
-        }
-
-        .order-items ul {
-            margin: 0;
-            padding-left: 20px;
-            list-style-type: disc;
-        }
-
-        .order-items li {
-            margin-bottom: 5px;
-            font-size: 0.95em;
-            color: #333;
-        }
-
-        .status-badge {
-            font-weight: 700;
-            font-size: 0.95em;
-            padding: 6px 12px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status-shipped {
-            color: #FFFFFF;
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-        }
-
-        .status-processing {
-            color: #333;
-            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .btn-action {
-            flex-grow: 1;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-
-        .btn-ship {
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-            color: #FFFFFF;
-            box-shadow: 0 3px 12px rgba(0,123,255,0.3);
-        }
-
-        .btn-ship:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(0,123,255,0.4);
-        }
-
-        .btn-complete {
-            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
-            color: #FFFFFF;
-            box-shadow: 0 3px 12px rgba(40,167,69,0.3);
-        }
-
-        .btn-complete:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(40,167,69,0.4);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 30px;
-            border: 3px dashed #ffc107;
-            border-radius: 12px;
-            background-color: #fff9e6;
-        }
-
-        .empty-state i {
-            font-size: 4em;
-            color: #ffc107;
-            opacity: 0.4;
-            margin-bottom: 15px;
-        }
-
-        .empty-state .title {
-            font-size: 1.4em;
-            font-weight: 700;
-            color: #36489e;
-            margin-bottom: 8px;
-        }
-
-        .empty-state .subtitle {
-            color: #666;
-            font-size: 1em;
-        }
-    </style>
-
-    <div class="delivery-container">
-        <header class="delivery-header">
-            <div class="header-left">
-                <a href="{% url 'admin_menu' %}" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
+    <!-- MODERN HEADER -->
+    <header style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                   padding: 30px 40px; border-radius: 16px;
+                   box-shadow: 0 10px 30px rgba(220, 53, 69, 0.3);
+                   margin-bottom: 30px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="{% url 'admin_menu' %}" style="
+                    background-color: rgba(255, 255, 255, 0.2);
+                    backdrop-filter: blur(10px);
+                    color: #fff;
+                    border-radius: 12px;
+                    width: 48px;
+                    height: 48px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border: 2px solid rgba(255, 255, 255, 0.3);
+                    text-decoration: none;
+                    transition: all 0.3s ease;">
+                    <i class="fas fa-arrow-left" style="font-size: 1.2em;"></i>
                 </a>
-                <h1>Orders in Processing & Shipping</h1>
+                <div>
+                    <h1 style="font-size: 2em; color: #fff; margin: 0; font-weight: 700; letter-spacing: -0.5px;">
+                        Orders Management
+                    </h1>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin: 5px 0 0 0; font-size: 0.95em;">
+                        Track and manage all delivery orders
+                    </p>
+                </div>
             </div>
-            <button class="btn-assign">
-                <i class="fas fa-plus"></i> Assign New Driver
-            </button>
-        </header>
 
-        <main class="delivery-main">
-            <p>Manage order fulfillment and view full order details below.</p>
+            <div style="background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+                        padding: 15px 25px; border-radius: 12px; border: 2px solid rgba(255, 255, 255, 0.3);">
+                <p style="font-size: 2em; font-weight: 700; color: #fff; margin: 0;">{{ orders.count }}</p>
+                <p style="font-size: 0.85em; color: rgba(255, 255, 255, 0.9); margin: 5px 0 0 0;">Total Orders</p>
+            </div>
+        </div>
+    </header>
 
-            <div class="order-list">
-                {% for order in orders %}
-                    <div class="order-card">
-                        <div class="order-info">
-                            <div class="order-details">
-                                <strong>Order #{{ order.id }}</strong>
-                                <p>Customer: {{ order.user.username }}</p>
-                                <p>Date: {{ order.created_at|date:"M d, Y - h:i A" }}</p>
-                            </div>
-                            <span class="status-badge {% if order.status == 'Shipped' %}status-shipped{% else %}status-processing{% endif %}">
-                                <i class="fas {% if order.status == 'Shipped' %}fa-shipping-fast{% else %}fa-clock{% endif %}"></i>
-                                {{ order.status|upper }}
+    <!-- MESSAGES SECTION -->
+    {% if messages %}
+      {% for message in messages %}
+        <div style="
+          margin-bottom: 20px;
+          padding: 16px 20px;
+          border-radius: 12px;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          animation: slideIn 0.3s ease;
+          {% if 'success' in message.tags %}
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 4px solid #28a745;
+          {% elif 'error' in message.tags %}
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+          {% else %}
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+            border-left: 4px solid #17a2b8;
+          {% endif %}
+        ">
+          <i class="fas {% if 'success' in message.tags %}fa-check-circle{% elif 'error' in message.tags %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"
+             style="font-size: 1.3em;"></i>
+          <span>{{ message }}</span>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- ORDERS GRID -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+                gap: 24px; margin-bottom: 40px;">
+        {% for order in orders %}
+            <div style="background: #fff; border-radius: 16px;
+                        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                        border-left: 5px solid #dc3545;
+                        transition: all 0.3s ease;
+                        position: relative;
+                        overflow: hidden;">
+
+                <!-- Order Header -->
+                <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                            padding: 20px 24px; border-bottom: 2px solid #e8ecf1;">
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0; font-size: 1.4em; color: #1a202c; font-weight: 700;
+                                   display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-receipt" style="color: #dc3545;"></i>
+                            Order #{{ order.id }}
+                        </h3>
+
+                        <!-- Status Badge -->
+                        <span style="padding: 8px 16px; border-radius: 25px; font-size: 0.75em; font-weight: 700;
+                                     text-transform: uppercase; letter-spacing: 0.5px;
+                                     display: inline-flex; align-items: center; gap: 6px;
+                                     {% if order.status == 'Pending' %}
+                                         background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+                                         color: #856404;
+                                         box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+                                     {% elif order.status == 'Processing' %}
+                                         background: linear-gradient(135deg, #cce7ff 0%, #b3d9ff 100%);
+                                         color: #004085;
+                                         box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+                                     {% elif order.status == 'Shipped' %}
+                                         background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+                                         color: #155724;
+                                         box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+                                     {% elif order.status == 'Completed' %}
+                                         background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+                                         color: #0c5460;
+                                         box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+                                     {% else %}
+                                         background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+                                         color: #721c24;
+                                         box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+                                     {% endif %}">
+                            <i class="fas {% if order.status == 'Pending' %}fa-clock{% elif order.status == 'Processing' %}fa-cog{% elif order.status == 'Shipped' %}fa-shipping-fast{% elif order.status == 'Completed' %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+
+                    <!-- Customer Info Grid -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 0.9em;">
+                            <i class="fas fa-user" style="color: #dc3545; width: 16px;"></i>
+                            <span>{{ order.user.username }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 0.9em;">
+                            <i class="fas fa-envelope" style="color: #dc3545; width: 16px;"></i>
+                            <span>{{ order.user.email }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 0.9em;">
+                            <i class="fas fa-calendar-alt" style="color: #dc3545; width: 16px;"></i>
+                            <span>{{ order.created_at|date:"M d, Y" }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 0.9em;">
+                            <i class="fas fa-clock" style="color: #dc3545; width: 16px;"></i>
+                            <span>{{ order.created_at|date:"h:i A" }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; color: #4a5568; font-size: 0.9em; grid-column: 1 / -1;">
+                            <i class="fas fa-truck" style="color: #dc3545; width: 16px;"></i>
+                            <span>
+                                <strong>Driver:</strong>
+                                {% if order.driver %}
+                                    {{ order.driver.username }}
+                                {% else %}
+                                    Not assigned
+                                {% endif %}
                             </span>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- 🧾 Order Details Section -->
-                        <div class="order-items">
-                            <h4>Order Details:</h4>
-                            <ul>
-                                {% for item in order.items.all %}
-                                    <li>
-                                        <strong>{{ item.medicine.name }}</strong> — Quantity: {{ item.quantity }}
-                                        {% if item.special_request %}
-                                            <br><span style="color:#5c74e3;">📝 Note: {{ item.special_request }}</span>
-                                        {% endif %}
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                <!-- Order Body -->
+                <div style="padding: 24px;">
+
+                    <!-- Order Items -->
+                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f5 100%);
+                                padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                        <div style="font-weight: 700; color: #2d3748; margin-bottom: 15px;
+                                    display: flex; align-items: center; gap: 8px; font-size: 1.05em;">
+                            <i class="fas fa-pills" style="color: #dc3545;"></i>
+                            Order Items
                         </div>
 
-                        <!-- Action Buttons -->
-                        <form method="post" action="{% url 'delivery_page' %}" style="margin:0;">
-                            {% csrf_token %}
-                            <input type="hidden" name="order_id" value="{{ order.id }}">
-                            <div class="action-buttons">
-                                <button type="submit" name="action" value="ship" class="btn-action btn-ship">
-                                    <i class="fas fa-shipping-fast"></i> Mark Shipped
-                                </button>
-                                <button type="submit" name="action" value="complete" class="btn-action btn-complete">
-                                    <i class="fas fa-check-double"></i> Mark Completed
-                                </button>
+                        {% for item in order.items.all %}
+                            <div style="display: flex; justify-content: space-between; align-items: center;
+                                        padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+                                <span style="font-weight: 600; color: #2d3748;">💊 {{ item.medicine.name }}</span>
+                                <span style="background: white; padding: 4px 12px; border-radius: 20px;
+                                             font-weight: 600; color: #dc3545; font-size: 0.9em;">× {{ item.quantity }}</span>
                             </div>
-                        </form>
+
+                            {% if item.special_request %}
+                            <div style="margin-top: 12px; padding: 12px 15px;
+                                        background: linear-gradient(135deg, #ffe5e8 0%, #ffd4d9 100%);
+                                        border-radius: 10px; border-left: 3px solid #dc3545; font-size: 0.9em;">
+                                <strong style="color: #dc3545; display: flex; align-items: center; gap: 6px; margin-bottom: 5px;">
+                                    <i class="fas fa-comment-medical"></i> Special Request:
+                                </strong>
+                                <div>{{ item.special_request }}</div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div style="text-align: right; font-size: 1.1em; font-weight: 700;
+                                    margin-top: 15px; padding-top: 15px; border-top: 2px solid #cbd5e0; color: #2d3748;">
+                            <i class="fas fa-box"></i> Total Items: {{ order.get_total_quantity }}
+                        </div>
                     </div>
-                {% empty %}
-                    <div class="empty-state">
-                        <i class="fas fa-truck"></i>
-                        <span class="title">No Active Deliveries</span>
-                        <span class="subtitle">No orders currently in the queue for processing or delivery.</span>
-                    </div>
-                {% endfor %}
+
+                    <!-- Driver Assignment -->
+                    <form method="post" action="{% url 'delivery_page' %}"
+                          style="background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+                                 padding: 20px; border-radius: 12px; margin-bottom: 20px;
+                                 border: 2px dashed #cbd5e0;">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+
+                        <div style="font-weight: 700; color: #2d3748; margin-bottom: 12px;
+                                    display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-user-tie" style="color: #dc3545;"></i>
+                            Driver Assignment
+                        </div>
+
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <select name="driver_id" style="flex: 1; min-width: 180px; padding: 12px 16px;
+                                                            border: 2px solid #e2e8f0; border-radius: 10px;
+                                                            background: white; font-size: 0.95em; color: #2d3748;
+                                                            transition: all 0.3s ease; cursor: pointer;">
+                                <option value="">-- Select Driver --</option>
+                                {% for driver in drivers %}
+                                    <option value="{{ driver.id }}" {% if order.driver and order.driver.id == driver.id %}selected{% endif %}>
+                                        {{ driver.username }} ({{ driver.email }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <button type="submit" name="action" value="assign_driver"
+                                    style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                                           color: white; border: none; padding: 11px 20px; border-radius: 10px;
+                                           cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                           box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+                                           transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas {% if order.driver %}fa-exchange-alt{% else %}fa-user-plus{% endif %}"></i>
+                                {% if order.driver %}Change{% else %}Assign{% endif %}
+                            </button>
+
+                            {% if order.driver %}
+                            <button type="submit" name="action" value="assign_driver"
+                                    onclick="this.form.driver_id.value=''"
+                                    style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+                                           color: white; border: none; padding: 11px 20px; border-radius: 10px;
+                                           cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                           box-shadow: 0 3px 10px rgba(108, 117, 125, 0.3);
+                                           transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-user-times"></i>
+                                Remove
+                            </button>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                    <!-- Action Buttons -->
+                    <form method="post" action="{% url 'delivery_page' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.id }}">
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            {% if order.status == "Pending" %}
+                                <button type="submit" name="action" value="process"
+                                        style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+                                               color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-cog"></i> Start Processing
+                                </button>
+                                <button type="submit" name="action" value="cancel"
+                                        style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                                               color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-times"></i> Cancel Order
+                                </button>
+
+                            {% elif order.status == "Processing" %}
+                                <button type="submit" name="action" value="ship"
+                                        style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+                                               color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(40, 167, 69, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-shipping-fast"></i> Out for Delivery
+                                </button>
+                                <button type="submit" name="action" value="cancel"
+                                        style="flex: 1; min-width: 140px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+                                               color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(220, 53, 69, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-times"></i> Cancel Order
+                                </button>
+
+                            {% elif order.status == "Shipped" %}
+                                <button type="submit" name="action" value="complete"
+                                        style="flex: 1; background: linear-gradient(135deg, #6f42c1 0%, #5a359c 100%);
+                                               color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(111, 66, 193, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-check-double"></i> Mark as Completed
+                                </button>
+
+                            {% elif order.status == "Completed" or order.status == "Cancelled" %}
+                                <button type="submit" name="action" value="reopen"
+                                        style="flex: 1; background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+                                               color: #212529; border: none; padding: 12px 20px; border-radius: 10px;
+                                               cursor: pointer; font-size: 0.9em; font-weight: 600;
+                                               box-shadow: 0 3px 10px rgba(255, 193, 7, 0.3);
+                                               transition: all 0.3s ease; display: inline-flex; align-items: center;
+                                               justify-content: center; gap: 8px;">
+                                    <i class="fas fa-redo"></i> Reopen Order
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
             </div>
-        </main>
+        {% empty %}
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 40px;
+                        background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+                        border-radius: 16px; border: 2px dashed #cbd5e0;">
+                <div style="width: 100px; height: 100px; margin: 0 auto 20px;
+                            background: linear-gradient(135deg, #ffe5e8 0%, #ffd4d9 100%);
+                            border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-truck-loading" style="font-size: 3em; color: #dc3545;"></i>
+                </div>
+                <h3 style="font-size: 1.4em; color: #2d3748; margin-bottom: 10px; font-weight: 600;">
+                    No Active Orders
+                </h3>
+                <p style="color: #718096; font-size: 1em; margin: 0;">
+                    All orders are either completed or cancelled.
+                </p>
+            </div>
+        {% endfor %}
     </div>
-    {% endblock %}
+</div>
+
+<style>
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Hover Effects */
+div[style*="border-left: 5px solid"]:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+select:focus {
+    outline: none;
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+a[href*="admin_menu"]:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+    transform: translateX(-3px);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: repeat(auto-fill, minmax(450px, 1fr))"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}
