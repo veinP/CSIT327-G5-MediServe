@@ -11,6 +11,7 @@ from .models import Announcement
 # ------------------------------
 # ADMIN: Manage Announcements
 # ------------------------------
+
 @login_required
 def announcements_view(request):
     """Admin can view, add, edit, and delete announcements."""
@@ -52,6 +53,7 @@ def announcements_view(request):
 # ------------------------------
 # ADMIN: Edit an Announcement
 # ------------------------------
+
 @login_required
 def edit_post(request, post_id):
     """Admin edits an existing announcement."""
@@ -88,6 +90,7 @@ def edit_post(request, post_id):
 # ------------------------------
 # ADMIN: Delete an Announcement
 # ------------------------------
+
 @login_required
 def delete_post(request, post_id):
     """Admin deletes an announcement."""
@@ -103,6 +106,7 @@ def delete_post(request, post_id):
 # ------------------------------
 # USER: View Announcements
 # ------------------------------
+
 @login_required
 def view_announcements(request):
     """Users view all posted announcements."""
