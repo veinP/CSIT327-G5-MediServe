@@ -52,6 +52,7 @@ def announcements_view(request):
 # ------------------------------
 # ADMIN: Edit an Announcement
 # ------------------------------
+
 @login_required
 def edit_post(request, post_id):
     """Admin edits an existing announcement."""
@@ -109,6 +110,7 @@ def view_announcements(request):
     data = supabase.table("tblannouncements").select("*").order("date_posted", desc=True).execute()
     announcements = data.data if data.data else []
     return render(request, "view_announcements.html", {"announcements": announcements})
+
 
 @login_required
 def add_post(request):
