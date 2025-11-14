@@ -12,7 +12,7 @@ class Medicine(models.Model):
 
     class Meta:
         db_table = 'tblmedicine'
-        managed = True  # Changed to True to allow Django migrations
+        managed = True
 
     def __str__(self):
         return self.name
