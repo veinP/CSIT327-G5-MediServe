@@ -369,7 +369,10 @@
                 {% endif %}
             </div>
             
-            
+            {% comment %}
+                <h1>updated stock quantity</h1>
+            {% endcomment %}
+
             {% with stock=medicine.stock_quantity %}
                 <div class="stock-status {% if stock == 0 %}stock-unavailable{% elif stock <= 10 %}stock-warning{% else %}stock-available{% endif %}">
                     {% if stock == 0 %}
