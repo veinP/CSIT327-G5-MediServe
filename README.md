@@ -125,4 +125,5 @@ Then open this link in your browser:
 | **Vein Carmell Pangilinan**  | Lead Developer | [veincarmell.pangilinan@cit.edu](mailto:veincarmell.pangilinan@cit.edu)   |
 | **Franklyn John Panugaling** | Developer      | [franklynjohn.panugaling@cit.edu](mailto:franklynjohn.panugaling@cit.edu) |
 | **Kristine Eunice Pureza**   | Developer      | [kristineeunice.pureza@cit.edu](mailto:kristineeunice.pureza@cit.edu)     |
+| **USER 3**                   | Developer      | [kristineeunice.pureza@cit.edu](mailto:kristineeunice.pureza@cit.edu)     |
 
