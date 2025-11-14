@@ -368,7 +368,8 @@
                     <span class="info-badge"><i class="fas fa-folder"></i> {{ medicine.category }}</span>
                 {% endif %}
             </div>
-
+            
+            
             {% with stock=medicine.stock_quantity %}
                 <div class="stock-status {% if stock == 0 %}stock-unavailable{% elif stock <= 10 %}stock-warning{% else %}stock-available{% endif %}">
                     {% if stock == 0 %}
