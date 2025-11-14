@@ -1,7 +1,6 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-import dj_database_url
 
 load_dotenv()
 
@@ -57,24 +56,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MediServe.wsgi.application'
 
-# Database configuration
-DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=0,  # Prevent connection pool issues
-            ssl_require=True
-        )
+# SUPABASE DATABASE CONFIGURATION
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres.qtcfmnnzcofmapqktwee',
+        'PASSWORD': 'Mediserve123#',
+        'HOST': 'aws-1-ap-southeast-1.pooler.supabase.com',
+        'PORT': '6543',
+        'OPTIONS': {
+            'sslmode': 'require',
+        },
     }
-    CONN_MAX_AGE = 0
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3'
-        }
-    }
+}
 
 # Static files
 STATIC_URL = '/static/'

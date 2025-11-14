@@ -123,9 +123,7 @@ def delete_medicine(request, id):
     return redirect("medicine_stock")
 
 
-# -------------------------------------------------------------------
-# Public Browse Page
-# -------------------------------------------------------------------
+#Medicine info list
 def medicine_list(request):
     """Public Browse Medicines page."""
     medicines = Medicine.objects.all().order_by('name')
