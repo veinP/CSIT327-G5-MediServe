@@ -6,10 +6,10 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "==> Running database migrations"
-python manage.py makemigrations
-python manage.py migrate --noinput
+python MediServe/manage.py makemigrations
+python MediServe/manage.py migrate --noinput
 
 echo "==> Collecting static files"
-python manage.py collectstatic --noinput
+python MediServe/manage.py collectstatic --noinput
 
 echo "==> Build complete"
