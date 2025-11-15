@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# FIXED: Go up one more level since this file is in MediServe/MediServe/
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+# CORRECTED: Go up TWO levels to point to MediServe/ directory
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load .env in local dev only (Render sets RENDER=true)
 if os.environ.get("RENDER", "") != "true":
