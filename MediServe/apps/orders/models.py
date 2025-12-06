@@ -41,133 +41,81 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.user.full_name} ({self.status})"
 
+    # -----------------------------
+    # QUEUE LOGIC
+    # -----------------------------
     def assign_queue_number(self):
-        """
-        Assign queue number with priority for Senior Citizens and PWD.
-        Priority users ALWAYS go to the front of the queue, even pushing regular users back.
-        """
-        # Get all active orders in queue (Pending or Processing), excluding self
         pending_orders = Order.objects.filter(
             status__in=['Pending', 'Processing'],
-            queue_number__isnull=False  # Only orders with queue numbers
+            queue_number__isnull=False
         ).exclude(pk=self.pk).order_by('queue_number')
 
-        # Check if current user is priority (Senior Citizen or PWD)
         is_priority = self.user.senior_citizen_id or self.user.pwd_id
 
         if is_priority:
-            # Priority users: ALWAYS insert at position 1 (top of queue)
-            # Find ALL regular (non-priority) users in queue
             regular_orders = pending_orders.filter(
                 user__senior_citizen_id__isnull=True,
                 user__pwd_id__isnull=True
-            ).order_by('queue_number')
+            )
+            priority_orders = pending_orders.exclude(id__in=regular_orders)
 
-            # Find ALL priority users in queue
-            priority_orders = pending_orders.filter(
-                models.Q(user__senior_citizen_id__isnull=False) |
-                models.Q(user__pwd_id__isnull=False)
-            ).order_by('queue_number')
-
-            if regular_orders.exists():
-                # There are regular users in the queue
-                # Insert this priority user right after the last priority user
-                # OR at position 1 if no priority users exist
-
-                if priority_orders.exists():
-                    # Put after the last priority user
-                    last_priority = priority_orders.last()
-                    insert_position = last_priority.queue_number + 1
-                    self.queue_number = insert_position
-
-                    # Shift all orders AT or AFTER this position by +1
-                    orders_to_shift = pending_orders.filter(
-                        queue_number__gte=insert_position
-                    ).order_by('queue_number')
-
-                    for order in orders_to_shift:
-                        order.queue_number += 1
-                        order.save()
-                else:
-                    # No priority users, insert at position 1 (front of queue)
-                    self.queue_number = 1
-
-                    # Shift ALL orders by +1
-                    for order in pending_orders.order_by('queue_number'):
-                        order.queue_number += 1
-                        order.save()
+            if priority_orders.exists():
+                last_priority = priority_orders.last()
+                insert_position = last_priority.queue_number + 1
             else:
-                # Only priority users in queue (or no orders at all)
-                if priority_orders.exists():
-                    last_priority = priority_orders.last()
-                    self.queue_number = last_priority.queue_number + 1
-                else:
-                    # No orders at all, start at 1
-                    self.queue_number = 1
+                insert_position = 1
+
+            self.queue_number = insert_position
+
+            orders_to_shift = pending_orders.filter(queue_number__gte=insert_position)
+            for order in orders_to_shift:
+                order.queue_number += 1
+                order.save()
+
         else:
-            # Regular users: Always append to the end
             if pending_orders.exists():
-                last_order = pending_orders.order_by('-queue_number').first()
+                last_order = pending_orders.last()
                 self.queue_number = last_order.queue_number + 1
             else:
-                # No orders at all
                 self.queue_number = 1
 
         self.save()
 
     def remove_from_queue(self):
-        """
-        Remove this order from queue and shift others down by 1.
-        This is called when order is Shipped or Cancelled.
-        """
-        if self.queue_number:
-            current_queue = self.queue_number
+        if not self.queue_number:
+            return
 
-            # Get all orders with queue_number greater than this one
-            orders_to_shift = Order.objects.filter(
-                status__in=['Pending', 'Processing'],
-                queue_number__gt=current_queue
-            ).order_by('queue_number')
+        current_queue = self.queue_number
 
-            # Shift queue numbers down by 1
-            for order in orders_to_shift:
-                order.queue_number -= 1
-                order.save()
+        orders_to_shift = Order.objects.filter(
+            status__in=['Pending', 'Processing'],
+            queue_number__gt=current_queue
+        ).order_by('queue_number')
 
-            # Clear this order's queue number
-            self.queue_number = None
-            self.save()
+        for order in orders_to_shift:
+            order.queue_number -= 1
+            order.save()
+
+        self.queue_number = None
+        self.save()
 
     def get_queue_position(self):
-        """
-        Returns the user's position in the active queue (Pending or Processing).
-        Priority users (Senior Citizen/PWD) are always at the front.
-        Returns None if not in queue.
-        """
         if self.status not in ['Pending', 'Processing']:
             return None
 
-        # Get all active orders ordered by queue_number
         active_orders = Order.objects.filter(
             status__in=['Pending', 'Processing']
-        ).order_by('queue_number', 'created_at')
+        ).order_by('queue_number')
 
-        for position, order in enumerate(active_orders, start=1):
-            if order.pk == self.pk:
-                return position
-
+        for pos, order in enumerate(active_orders, start=1):
+            if order.id == self.id:
+                return pos
         return None
 
     def can_user_access(self, user):
-        """
-        Validation: Only the order's owner can access queue details.
-        """
         return self.user == user
 
     def is_priority_user(self):
-        """
-        Helper method to check if the order belongs to a priority user.
-        """
         return bool(self.user.senior_citizen_id or self.user.pwd_id)
 
 
